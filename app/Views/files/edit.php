@@ -103,12 +103,30 @@
                             <!-- Fecha de expiración -->
                             <div class="col-md-6">
                                 <label for="expires_at" class="form-label fw-semibold">Fecha de Caducidad (Opcional)</label>
-                                <input type="datetime-local" class="form-control" name="expires_at" id="expires_at" value="<?= !empty($share->expires_at) ? date('Y-m-d\TH:i', strtotime($share->expires_at)) : '' ?>">
+                                <div class="input-group datepicker">
+                                    <input type="text" class="form-control" name="expires_at" id="expires_at" placeholder="Seleccionar fecha y hora" data-input value="<?= !empty($share->expires_at) ? date('Y-m-d H:i', strtotime($share->expires_at)) : '' ?>">
+                                    <button class="btn bg-transparent border text-muted" type="button" data-toggle>
+                                        <i class="ti ti-calendar"></i>
+                                    </button>
+                                </div>
                                 <?php if (!empty($share->expires_at)): ?>
                                     <small class="text-muted d-block mt-1">
                                         Vence el: <?= date('d/m/Y H:i', strtotime($share->expires_at)) ?>
                                     </small>
                                 <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Autodestrucción -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="auto_destroy" name="auto_destroy" value="1" <?= $share->auto_destroy ? 'checked' : '' ?> onchange="document.getElementById('auto_destroy_warning').classList.toggle('d-none', !this.checked)">
+                                    <label class="form-check-label fw-semibold" for="auto_destroy">Autodestrucción</label>
+                                </div>
+                                <div id="auto_destroy_warning" class="alert alert-primary mt-4 border border-primary <?= $share->auto_destroy ? '' : 'd-none' ?> p-2 small" role="alert">
+                                    El archivo se borrará físicamente del servidor al caducar o alcanzar su límite.
+                                </div>
                             </div>
                         </div>
 

@@ -16,7 +16,7 @@
       
       const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
       
-      const systemAlert = Swal.mixin({
+      window.systemAlert = Swal.mixin({
         position: 'center',
         showConfirmButton: false,
         buttonsStyling: false,
@@ -28,16 +28,16 @@
       });
       
       if (toastMessage) {
-        systemAlert.fire({ icon: 'success', title: '¡Completado!', html: `<div class="text-center">${toastMessage}</div>`, iconColor: '#10B981' });
+        window.systemAlert.fire({ icon: 'success', title: '¡Completado!', html: `<div class="text-center">${toastMessage}</div>`, iconColor: '#10B981' });
       }
       if (toastError) {
-        systemAlert.fire({ icon: 'error', title: 'Error', html: `<div class="text-center">${toastError}</div>`, iconColor: '#b31b34' });
+        window.systemAlert.fire({ icon: 'error', title: 'Error', html: `<div class="text-center">${toastError}</div>`, iconColor: '#b31b34' });
       }
       if (toastErrors) {
         const errorContent = typeof toastErrors === 'object' && toastErrors !== null
           ? (Array.isArray(toastErrors) ? toastErrors : Object.values(toastErrors)).join('<br>') 
           : toastErrors;
-        systemAlert.fire({ icon: 'error', title: 'Error de Validación', html: `<div class="text-center">${errorContent}</div>`, iconColor: '#b31b34' });
+        window.systemAlert.fire({ icon: 'error', title: 'Error de Validación', html: `<div class="text-center">${errorContent}</div>`, iconColor: '#b31b34' });
       }
     });
   </script>

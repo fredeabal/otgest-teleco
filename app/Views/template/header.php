@@ -49,6 +49,16 @@
   <link rel="stylesheet" href="<?= base_url('assets/') ?>css/styles.css?v=<?= filemtime(FCPATH . 'assets/css/styles.css') ?>" />
   <link rel="stylesheet" href="<?= base_url('assets/') ?>css/custom.css?v=<?= filemtime(FCPATH . 'assets/css/custom.css') ?>" />
   <link rel="stylesheet" href="<?= base_url('assets/libs/sweetalert2/dist/sweetalert2.min.css') ?>" />
+  
+  <!-- Flatpickr (Premium Datetime Picker) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+  <style>
+    .flatpickr-calendar {
+        z-index: 9999 !important;
+    }
+  </style>
 
   <title><?= isset($title) ? $title . ' | FileCrew' : 'FileCrew | Share Files' ?></title>
 </head>

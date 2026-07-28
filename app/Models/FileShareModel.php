@@ -23,7 +23,8 @@ class FileShareModel extends Model
         'expires_at',
         'download_limit',
         'download_count',
-        'is_public'
+        'is_public',
+        'auto_destroy'
     ];
 
     // Dates

@@ -24,7 +24,9 @@
                                     </button>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Desbloquear Archivo</button>
+                            <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2 d-flex align-items-center justify-content-center gap-2">
+                                <i class="ti ti-lock-open fs-5"></i> Desbloquear Archivo
+                            </button>
                         </form>
 
                     <?php else: ?>
@@ -34,29 +36,45 @@
                         <h3 class="fw-bold mb-1 text-truncate text-center text-primary" style="max-width: 100%;"><?= esc($share->filename) ?></h3>
                         <p class="text-muted mb-4 text-center">Tamaño: <span class="fw-semibold text-dark"><?= esc($fileSizeFormatted) ?></span></p>
 
-                        <div class="p-3 bg-light-primary rounded mb-4 text-start">
-                            <div class="row fs-2 text-muted">
-                                <div class="col-6 mb-2">
+                         <div class="p-3 bg-light-primary rounded mb-4 text-start">
+                            <div class="row fs-2">
+                                <div class="col-6 mb-3">
                                     <span class="fw-semibold d-block text-dark">Tipo de archivo:</span>
-                                    <?= esc(strtoupper(pathinfo($share->filename, PATHINFO_EXTENSION) ?: 'ARCHIVO')) ?>
+                                    <span class="text-muted"><?= esc(strtoupper(pathinfo($share->filename, PATHINFO_EXTENSION) ?: 'ARCHIVO')) ?></span>
                                 </div>
-                                <div class="col-6 mb-2">
+                                <div class="col-6 mb-3">
                                     <span class="fw-semibold d-block text-dark">Límite de descargas:</span>
-                                    <?= !empty($share->download_limit) ? esc($share->download_limit) . ' descargas' : 'Ilimitado' ?>
+                                    <span class="text-muted"><?= !empty($share->download_limit) ? esc($share->download_limit) . ' descargas' : 'Ilimitado' ?></span>
                                 </div>
                                 <div class="col-6">
                                     <span class="fw-semibold d-block text-dark">Descargas actuales:</span>
-                                    <?= esc($share->download_count) ?> descargas
+                                    <span class="text-muted"><?= esc($share->download_count) ?> descargas</span>
                                 </div>
                                 <div class="col-6">
                                     <span class="fw-semibold d-block text-dark">Caducidad:</span>
-                                    <?= !empty($share->expires_at) ? date('d/m/Y H:i', strtotime($share->expires_at)) : 'Permanente' ?>
+                                    <span class="text-muted"><?= !empty($share->expires_at) ? date('d/m/Y H:i', strtotime($share->expires_at)) : 'Permanente' ?></span>
                                 </div>
+                                <?php if (!empty($fileHash)): ?>
+                                    <div class="col-12 mt-4 pt-3 border-top">
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <span class="fw-semibold text-uppercase text-muted" style="letter-spacing: 0.5px;">Firma Digital SHA-256</span>
+                                            <button class="btn btn-sm btn-light-primary text-primary d-flex align-items-center gap-1 rounded-pill px-3 shadow-none" 
+                                                    onclick="navigator.clipboard.writeText('<?= esc($fileHash) ?>'); window.systemAlert && window.systemAlert.fire({ icon: 'success', title: '¡Completado!', html: '<div class=\'text-center\'>Hash copiado al portapapeles</div>', iconColor: '#10B981', timer: 2000 });" 
+                                                    title="Copiar Hash">
+                                                <i class="ti ti-copy"></i>
+                                                <span>Copiar</span>
+                                            </button>
+                                        </div>
+                                        <div class="bg-body border rounded p-3 text-break font-monospace text-muted fs-3 shadow-sm">
+                                            <?= esc($fileHash) ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
-                        <a href="<?= base_url('s/' . $share->slug . '/download') ?>" class="btn btn-primary w-100 py-8 mb-4 rounded-2 mt-4">
-                            Descargar Archivo
+                        <a href="<?= base_url('s/' . $share->slug . '/download') ?>" class="btn btn-primary w-100 py-8 mb-4 rounded-2 mt-4 d-flex align-items-center justify-content-center gap-2">
+                            <i class="ti ti-download fs-5"></i> Descargar Archivo
                         </a>
                     <?php endif; ?>
 

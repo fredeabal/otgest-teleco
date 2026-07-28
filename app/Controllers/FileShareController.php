@@ -21,6 +21,9 @@ class FileShareController extends BaseController
     // ---------------------------------------------------------------------
     public function index()
     {
+        // Limpiar archivos vencidos con autodestrucción (Ejecución silenciosa)
+        $this->cleanupExpiredFiles();
+
         $userId = auth()->id();
         $search = $this->request->getGet('q');
 
@@ -83,9 +86,18 @@ class FileShareController extends BaseController
             ],
             'expires_at' => [
                 'label' => 'fecha de expiración',
-                'rules' => 'permit_empty|valid_date[Y-m-d\TH:i]',
+                'rules' => 'permit_empty|valid_date[Y-m-d H:i]',
                 'errors' => [
                     'valid_date' => 'La fecha de expiración debe ser una fecha y hora válida.'
+                ]
+            ],
+            'custom_slug' => [
+                'label' => 'enlace personalizado',
+                'rules' => 'permit_empty|alpha_dash|max_length[255]|is_unique[file_shares.slug]',
+                'errors' => [
+                    'alpha_dash' => 'El enlace personalizado solo puede contener letras, números, guiones y guiones bajos.',
+                    'max_length' => 'El enlace personalizado no puede superar los 255 caracteres.',
+                    'is_unique' => 'Este enlace personalizado ya está en uso, por favor elige otro.'
                 ]
             ]
         ];
@@ -100,8 +112,13 @@ class FileShareController extends BaseController
             return redirect()->back()->withInput()->with('error', 'El archivo subido no es válido.');
         }
 
-        // Generar un slug único de 12 caracteres
-        $slug = $this->generateUniqueSlug();
+        // Obtener slug personalizado o generar uno aleatorio
+        $customSlug = $this->request->getPost('custom_slug');
+        if (!empty($customSlug)) {
+            $slug = strtolower($customSlug);
+        } else {
+            $slug = $this->generateUniqueSlug();
+        }
 
         // Generar un nombre aleatorio de almacenamiento para evitar colisiones en disco
         $storageName = $file->getRandomName();
@@ -136,6 +153,7 @@ class FileShareController extends BaseController
 
         // Visibilidad pública o privada
         $isPublic = $this->request->getPost('is_public') !== null ? (int)$this->request->getPost('is_public') : 1;
+        $autoDestroy = $this->request->getPost('auto_destroy') ? 1 : 0;
 
         // Guardar metadata en BD
         $this->fileShareModel->save([
@@ -149,7 +167,8 @@ class FileShareController extends BaseController
             'expires_at'     => $expiresAt,
             'download_limit' => $downloadLimit,
             'download_count' => 0,
-            'is_public'      => $isPublic
+            'is_public'      => $isPublic,
+            'auto_destroy'   => $autoDestroy
         ]);
 
         return redirect()->to(base_url('files'))->with('message', 'Archivo subido y enlace de compartición generado exitosamente.');
@@ -200,7 +219,7 @@ class FileShareController extends BaseController
             ],
             'expires_at' => [
                 'label' => 'fecha de expiración',
-                'rules' => 'permit_empty|valid_date[Y-m-d\TH:i]',
+                'rules' => 'permit_empty|valid_date[Y-m-d H:i]',
                 'errors' => [
                     'valid_date' => 'La fecha de expiración debe ser una fecha y hora válida.'
                 ]
@@ -210,6 +229,9 @@ class FileShareController extends BaseController
         if (!$this->validate($validationRules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
+
+        // Mantener el slug original (ya no se permite editar)
+        $slug = $share->slug;
 
         // Procesar contraseña
         $passwordHash = $share->password;
@@ -231,6 +253,7 @@ class FileShareController extends BaseController
 
         // Visibilidad pública o privada
         $isPublic = $this->request->getPost('is_public') !== null ? (int)$this->request->getPost('is_public') : 0;
+        $autoDestroy = $this->request->getPost('auto_destroy') ? 1 : 0;
 
         // Borrar contraseña explícitamente
         $removePassword = $this->request->getPost('remove_password');
@@ -265,13 +288,15 @@ class FileShareController extends BaseController
         }
 
         $this->fileShareModel->update($id, [
+            'slug'           => $slug,
             'filename'       => $fileName,
             'storage_name'   => $storageName,
             'file_size'      => $fileSize,
             'password'       => $passwordHash,
             'expires_at'     => $expiresAt,
             'download_limit' => $downloadLimit,
-            'is_public'      => $isPublic
+            'is_public'      => $isPublic,
+            'auto_destroy'   => $autoDestroy
         ]);
 
         return redirect()->to(base_url('files'))->with('message', 'Las opciones de compartición han sido actualizadas.');
@@ -419,11 +444,19 @@ class FileShareController extends BaseController
 
         // Verificar caducidad por fecha
         if (!empty($share->expires_at) && Time::now()->isAfter(Time::parse($share->expires_at))) {
+            if ($share->auto_destroy) {
+                $this->destroyFileShare($share);
+                return $this->showPublicError('Archivo Autodestruido', 'Este enlace de compartición ha caducado y el archivo se ha eliminado permanentemente de nuestros servidores.');
+            }
             return $this->showPublicError('Enlace Expirado', 'Este enlace de compartición ha caducado por límite de tiempo.');
         }
 
         // Verificar caducidad por límite de descargas
         if (!empty($share->download_limit) && $share->download_count >= $share->download_limit) {
+            if ($share->auto_destroy) {
+                $this->destroyFileShare($share);
+                return $this->showPublicError('Archivo Autodestruido', 'Este archivo ha alcanzado su límite de descargas y se ha eliminado permanentemente de nuestros servidores.');
+            }
             return $this->showPublicError('Límite de Descargas Superado', 'Este archivo ya no está disponible porque alcanzó su límite máximo de descargas.');
         }
 
@@ -433,11 +466,20 @@ class FileShareController extends BaseController
         $unlockedShares = $session->get('unlocked_shares') ?: [];
         $requiresPassword = !empty($share->password) && !in_array($share->id, $unlockedShares);
 
+        $fileHash = null;
+        if (!$requiresPassword) {
+            $filePath = WRITEPATH . 'uploads/files/' . $share->storage_name;
+            if (file_exists($filePath)) {
+                $fileHash = hash_file('sha256', $filePath);
+            }
+        }
+
         $data = [
             'title'            => 'Descargar Archivo',
             'share'            => $share,
             'requiresPassword' => $requiresPassword,
-            'fileSizeFormatted'=> $this->formatBytes($share->file_size)
+            'fileSizeFormatted'=> $this->formatBytes($share->file_size),
+            'fileHash'         => $fileHash
         ];
 
         // Usamos una cabecera y pie de página limpios para los usuarios públicos
@@ -487,10 +529,18 @@ class FileShareController extends BaseController
 
         // Volver a verificar expiraciones por seguridad
         if (!empty($share->expires_at) && Time::now()->isAfter(Time::parse($share->expires_at))) {
+            if ($share->auto_destroy) {
+                $this->destroyFileShare($share);
+                return redirect()->to(base_url('/'))->with('error', 'El enlace ha caducado y el archivo se ha autodestruido.');
+            }
             return redirect()->to(base_url('/'))->with('error', 'El enlace ha caducado.');
         }
 
         if (!empty($share->download_limit) && $share->download_count >= $share->download_limit) {
+            if ($share->auto_destroy) {
+                $this->destroyFileShare($share);
+                return redirect()->to(base_url('/'))->with('error', 'Límite de descargas alcanzado y el archivo se ha autodestruido.');
+            }
             return redirect()->to(base_url('/'))->with('error', 'Límite de descargas alcanzado.');
         }
 
@@ -517,6 +567,45 @@ class FileShareController extends BaseController
 
         // Retornar archivo como stream de descarga
         return $this->response->download($filePath, null)->setFileName($share->filename);
+    }
+
+    // ---------------------------------------------------------------------
+    // Función auxiliar para eliminar el archivo físicamente y en BD
+    // ---------------------------------------------------------------------
+    private function destroyFileShare($share)
+    {
+        $filePath = WRITEPATH . 'uploads/files/' . $share->storage_name;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+        $this->fileShareModel->delete($share->id);
+    }
+
+    // ---------------------------------------------------------------------
+    // Limpieza silenciosa de archivos autodestruibles caducados
+    // Se ejecuta de fondo cuando se carga el panel
+    // ---------------------------------------------------------------------
+    private function cleanupExpiredFiles()
+    {
+        $shares = $this->fileShareModel->where('auto_destroy', 1)->findAll();
+        
+        foreach ($shares as $share) {
+            $shouldDelete = false;
+
+            // Verificar caducidad por fecha
+            if (!empty($share->expires_at) && Time::now()->isAfter(Time::parse($share->expires_at))) {
+                $shouldDelete = true;
+            }
+
+            // Verificar caducidad por límite de descargas
+            if (!empty($share->download_limit) && $share->download_count >= $share->download_limit) {
+                $shouldDelete = true;
+            }
+
+            if ($shouldDelete) {
+                $this->destroyFileShare($share);
+            }
+        }
     }
 
     // ---------------------------------------------------------------------

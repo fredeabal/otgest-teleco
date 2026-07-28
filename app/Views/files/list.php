@@ -54,7 +54,6 @@
                             <th scope="col">Archivo</th>
                             <th scope="col" class="text-center d-none d-lg-table-cell">Creado</th>
                             <th scope="col" class="text-center d-none d-sm-table-cell">Tamaño</th>
-                            <th scope="col" class="text-center d-none d-md-table-cell">Visibilidad</th>
                             <th scope="col" class="text-center d-none d-md-table-cell">Descargas</th>
                             <th scope="col" class="text-center d-none d-lg-table-cell">Expiración</th>
                             <th scope="col" class="text-end">Acciones</th>
@@ -63,7 +62,7 @@
                     <tbody>
                         <?php if (empty($files)): ?>
                             <tr>
-                                <td colspan="7" class="text-center py-4 text-muted">
+                                <td colspan="6" class="text-center py-4 text-muted">
                                     <i class="ti ti-folder-off fs-8 d-block mb-2"></i>
                                     No se encontraron archivos compartidos.
                                 </td>
@@ -105,13 +104,6 @@
                                         <span class="fw-normal text-muted text-login-time"><?= date('H:i', strtotime($file->created_at)) ?></span>
                                     </td>
                                     <td class="text-center d-none d-sm-table-cell"><?= $sizeFormatted ?></td>
-                                    <td class="text-center d-none d-md-table-cell">
-                                        <?php if ((int)$file->is_public === 1): ?>
-                                            <span class="badge bg-primary badge-status">Público</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-danger badge-status">Privado</span>
-                                        <?php endif; ?>
-                                    </td>
                                     <td class="text-center d-none d-md-table-cell">
                                         <div class="d-flex align-items-center justify-content-center gap-2">
                                             <span class="fw-semibold"><?= esc($file->download_count) ?></span>
@@ -162,7 +154,7 @@
                                                     </button>
                                                 </li>
                                                 <li>
-                                                    <form action="<?= base_url('files/delete/' . $file->id) ?>" method="POST" class="d-inline form-confirm-delete">
+                                                    <form action="<?= base_url('files/delete/' . $file->id) ?>" method="POST" class="d-inline" data-confirm="Esta acción borrará físicamente el archivo del servidor y caducará el enlace de compartición.">
                                                         <?= csrf_field() ?>
                                                         <button type="submit" class="dropdown-item d-flex align-items-center gap-2 text-danger w-100 border-0 bg-transparent text-start">
                                                             <i class="ti ti-trash"></i> Eliminar
@@ -234,53 +226,19 @@ document.addEventListener("DOMContentLoaded", function() {
             emailModal.show();
         });
     });
-
-    // 2. Confirmación SweetAlert para eliminación destructiva
-    document.querySelectorAll('.form-confirm-delete').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
-            
-            Swal.fire({
-                title: '¿Eliminar archivo?',
-                text: "Esta acción borrará físicamente el archivo del servidor y caducará el enlace de compartición.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#b31b34',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar',
-                background: isDark ? '#121a1f' : '#fff',
-                color: isDark ? '#fff' : '#000'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    });
 });
 
-// 3. Copiar enlace al portapapeles con alerta SweetAlert
+// 3. Copiar enlace al portapapeles
 function copyShareLink(url) {
-    const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
-    
     navigator.clipboard.writeText(url).then(() => {
-        Swal.fire({
-            icon: 'success',
-            title: '¡Enlace copiado!',
-            text: 'El enlace de compartición se ha guardado en tu portapapeles.',
-            position: 'center',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            background: isDark ? '#121a1f' : '#fff',
-            color: isDark ? '#fff' : '#000',
-            iconColor: '#10B981'
-        });
-    }).catch(err => {
-        console.error('Error al copiar enlace: ', err);
+        if (window.systemAlert) {
+            window.systemAlert.fire({
+                icon: 'success',
+                title: '¡Enlace copiado!',
+                html: '<div class="text-center">El enlace de compartición se ha guardado en tu portapapeles.</div>',
+                iconColor: '#10B981'
+            });
+        }
     });
 }
 </script>

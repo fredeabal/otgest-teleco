@@ -67,13 +67,11 @@
                         <h5 class="fw-semibold mb-3">Opciones de Compartición</h5>
                         
                         <div class="row mb-3">
-                            <!-- Visibilidad Pública/Privada -->
+                            <!-- Nombre Personalizado -->
                             <div class="col-md-6 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">Privacidad</label>
-                                <div class="form-check form-switch mt-2">
-                                    <input class="form-check-input switch-custom-size" type="checkbox" name="is_public" id="is_public" value="1" checked>
-                                    <label class="form-check-label ms-2 cursor-pointer" for="is_public" id="privacy-label">Enlace Público (cualquiera con el link accede)</label>
-                                </div>
+                                <label for="custom_slug" class="form-label fw-semibold">Nombre Personalizado (Opcional)</label>
+                                <input type="text" class="form-control" name="custom_slug" id="custom_slug" placeholder="mi-archivo">
+                                <small class="form-text text-muted mt-1" style="font-size: 0.75rem;">Dejar vacío para generar uno aleatorio.</small>
                             </div>
 
                             <!-- Contraseña -->
@@ -95,10 +93,28 @@
                                 <input type="number" class="form-control" name="download_limit" id="download_limit" min="1" placeholder="Dejar vacío para ilimitado">
                             </div>
 
-                            <!-- Caducidad en fecha y hora -->
+                            <!-- Caducidad en fecha -->
                             <div class="col-md-6">
                                 <label for="expires_at" class="form-label fw-semibold">Fecha de Caducidad (Opcional)</label>
-                                <input type="datetime-local" class="form-control" name="expires_at" id="expires_at">
+                                <div class="input-group datepicker">
+                                    <input type="text" class="form-control" name="expires_at" id="expires_at" placeholder="Seleccionar fecha y hora" data-input>
+                                    <button class="btn bg-transparent border text-muted" type="button" data-toggle>
+                                        <i class="ti ti-calendar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Autodestrucción -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="auto_destroy" name="auto_destroy" value="1" onchange="document.getElementById('auto_destroy_warning').classList.toggle('d-none', !this.checked)">
+                                    <label class="form-check-label fw-semibold" for="auto_destroy">Autodestrucción</label>
+                                </div>
+                                <div id="auto_destroy_warning" class="alert alert-primary border border-primary mt-4 d-none p-2 small" role="alert">
+                                    El archivo se borrará físicamente del servidor al caducar o alcanzar su límite.
+                                </div>
                             </div>
                         </div>
 
@@ -146,54 +162,48 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 3. Drag and Drop events
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropzone.addEventListener(eventName, function(e) {
-            e.preventDefault();
-            dropzone.classList.add('dragover');
+    if (dropzone) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, function(e) {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, function(e) {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', function(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                // Disparar evento change manualmente
+                fileInput.dispatchEvent(new Event('change'));
+            }
         }, false);
-    });
+    }
 
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropzone.addEventListener(eventName, function(e) {
-            e.preventDefault();
-            dropzone.classList.remove('dragover');
-        }, false);
-    });
-
-    dropzone.addEventListener('drop', function(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        if (files.length > 0) {
-            fileInput.files = files;
-            // Disparar evento change manualmente
-            fileInput.dispatchEvent(new Event('change'));
-        }
-    }, false);
-
-    // 4. Mostrar/Ocultar contraseña
+    // 4. Toggle visibility of password
     const togglePassword = document.getElementById('toggle-password');
     const passwordInput = document.getElementById('password');
-    togglePassword.addEventListener('click', function() {
+    togglePassword.addEventListener('click', function () {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-        const icon = this.querySelector('i');
-        if (type === 'text') {
-            icon.classList.remove('ti-eye');
-            icon.classList.add('ti-eye-off');
-        } else {
-            icon.classList.remove('ti-eye-off');
-            icon.classList.add('ti-eye');
-        }
+        this.innerHTML = type === 'password' ? '<i class="ti ti-eye"></i>' : '<i class="ti ti-eye-off"></i>';
     });
 
-    // 5. Actualizar la etiqueta del switch de privacidad
-    const isPublicSwitch = document.getElementById('is_public');
-    const privacyLabel = document.getElementById('privacy-label');
-    isPublicSwitch.addEventListener('change', function() {
-        if (this.checked) {
-            privacyLabel.textContent = 'Enlace Público (cualquiera con el link accede)';
-        } else {
-            privacyLabel.textContent = 'Enlace Privado (requiere iniciar sesión en FileCrew)';
+    // Validar subida antes de enviar
+    form.addEventListener('submit', function(e) {
+        if (fileInput.files.length === 0) {
+            e.preventDefault();
+            if (window.systemAlert) {
+                window.systemAlert.fire({ icon: 'warning', title: 'Archivo faltante', html: '<div class="text-center">Por favor selecciona o arrastra un archivo primero.</div>', iconColor: '#FFAE1F' });
+            }
         }
     });
 

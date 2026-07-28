@@ -12,6 +12,26 @@
   <script src="<?= base_url('assets/') ?>js/theme/theme.js"></script>
   <script src="<?= base_url('assets/') ?>js/theme/app.min.js"></script>
   <script src="<?= base_url('assets/') ?>js/theme/sidebarmenu.js"></script>
+  <!-- Flatpickr JS (Premium Datetime) -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr('.datepicker', {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                locale: "es",
+                minDate: "today",
+                wrap: true, // Permite que el ícono clickeable abra el calendario si es parte del wrapper
+                position: "top" // Siempre se despliega hacia arriba
+            });
+            console.log("Flatpickr inicializado hacia arriba y en español");
+        }
+    });
+  </script>
 
   <!-- solar icons -->
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
@@ -138,7 +158,7 @@
       
       const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
       
-      const systemAlert = Swal.mixin({
+      window.systemAlert = Swal.mixin({
         position: 'center',
         showConfirmButton: false,
         buttonsStyling: false,
@@ -150,16 +170,16 @@
       });
       
       if (toastMessage) {
-        systemAlert.fire({ icon: 'success', title: '¡Completado!', html: `<div class="text-center">${toastMessage}</div>`, iconColor: '#10B981' });
+        window.systemAlert.fire({ icon: 'success', title: '¡Completado!', html: `<div class="text-center">${toastMessage}</div>`, iconColor: '#10B981' });
       }
       if (toastError) {
-        systemAlert.fire({ icon: 'error', title: 'Error', html: `<div class="text-center">${toastError}</div>`, iconColor: '#b31b34' });
+        window.systemAlert.fire({ icon: 'error', title: 'Error', html: `<div class="text-center">${toastError}</div>`, iconColor: '#b31b34' });
       }
       if (toastErrors) {
         const errorContent = typeof toastErrors === 'object' && toastErrors !== null
           ? (Array.isArray(toastErrors) ? toastErrors : Object.values(toastErrors)).join('<br>') 
           : toastErrors;
-        systemAlert.fire({ icon: 'error', title: 'Error de Validación', html: `<div class="text-center">${errorContent}</div>`, iconColor: '#b31b34' });
+        window.systemAlert.fire({ icon: 'error', title: 'Error de Validación', html: `<div class="text-center">${errorContent}</div>`, iconColor: '#b31b34' });
       }
     });
   </script>
