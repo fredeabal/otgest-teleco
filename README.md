@@ -1,9 +1,9 @@
-# 🚀 FileCrew - Compartición y Transferencia de Archivos Segura
+# 🚀 FileCrew - Intercambio y Transferencia de Archivos Segura
 
 <p align="center">
   <img src="public/assets/images/logos/light-logo.svg" alt="FileCrew Logo" width="280">
   <br>
-  <b>Plataforma de compartición y transferencia de archivos autohospedada basada en PHP (CodeIgniter 4) y SQLite3.</b>
+  <b>Plataforma de intercambio y transferencia de archivos autohospedada, basada en PHP (CodeIgniter 4) y SQLite3.</b>
   <br><br>
   <a href="https://github.com/fredeabal/filecrew/releases"><img src="https://img.shields.io/badge/version-1.0.0-orange.svg" alt="Version 1.0.0"></a>
   <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4.svg" alt="PHP 8.2+"></a>
