@@ -24,6 +24,31 @@
   </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Toggle para Contraseña
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="ti ti-eye"></i>' : '<i class="ti ti-eye-off"></i>';
+        });
+    }
+
+    // Toggle para Confirmar Contraseña
+    const togglePasswordConfirm = document.getElementById('toggle-password-confirm');
+    const passwordConfirmInput = document.getElementById('pass_confirm');
+    if (togglePasswordConfirm && passwordConfirmInput) {
+        togglePasswordConfirm.addEventListener('click', function () {
+            const type = passwordConfirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordConfirmInput.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="ti ti-eye"></i>' : '<i class="ti ti-eye-off"></i>';
+        });
+    }
+});
+</script>
 <!-- =====================================================================
      FORMULARIO DE CREACIÓN DE USUARIO
      ===================================================================== -->
@@ -48,11 +73,21 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password">
+                            <button class="btn bg-transparent border text-muted" type="button" id="toggle-password">
+                                <i class="ti ti-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="pass_confirm" class="form-label">Confirmar Contraseña</label>
-                        <input type="password" class="form-control" id="pass_confirm" name="pass_confirm">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="pass_confirm" name="pass_confirm">
+                            <button class="btn bg-transparent border text-muted" type="button" id="toggle-password-confirm">
+                                <i class="ti ti-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="group" class="form-label">Rol / Grupo</label>

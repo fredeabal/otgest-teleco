@@ -48,40 +48,44 @@
 
           <hr class="my-4 border-light-subtle opacity-25">
 
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="username" class="form-label fw-semibold">Nombre de Usuario (Apodo)</label>
-              <input type="text" class="form-control" id="username" name="username" value="<?= old('username', esc($user->username)) ?>">
-            </div>
-            
-            <div class="col-md-6 mb-3">
-              <label for="name" class="form-label fw-semibold">Nombre Completo</label>
-              <input type="text" class="form-control" id="name" name="name" value="<?= old('name', esc($user->name ?? '')) ?>" placeholder="Ej: Juan Pérez">
-            </div>
+          <div class="mb-3">
+            <label for="username" class="form-label fw-semibold">Nombre de Usuario (Apodo)</label>
+            <input type="text" class="form-control" id="username" name="username" value="<?= old('username', esc($user->username)) ?>">
+          </div>
+          
+          <div class="mb-3">
+            <label for="name" class="form-label fw-semibold">Nombre Completo</label>
+            <input type="text" class="form-control" id="name" name="name" value="<?= old('name', esc($user->name ?? '')) ?>" placeholder="Ej: Juan Pérez">
           </div>
 
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
-              <input type="email" class="form-control" id="email" name="email" value="<?= old('email', esc($user->getIdentities()[0]->secret ?? '')) ?>">
-              <div class="form-text opacity-75">Se usa para iniciar sesión.</div>
-            </div>
-            
-            <div class="col-md-6 mb-3">
-              <label for="phone" class="form-label fw-semibold">Número de Teléfono</label>
-              <input type="text" class="form-control" id="phone" name="phone" value="<?= old('phone', esc($user->phone ?? '')) ?>" placeholder="Ej: 600123456">
-            </div>
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" name="email" value="<?= old('email', esc($user->getIdentities()[0]->secret ?? '')) ?>">
+            <div class="form-text opacity-75">Se usa para iniciar sesión.</div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="phone" class="form-label fw-semibold">Número de Teléfono</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="<?= old('phone', esc($user->phone ?? '')) ?>" placeholder="Ej: 600123456">
           </div>
 
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="password" class="form-label fw-semibold">Nueva Contraseña</label>
+          <div class="mb-3">
+            <label for="password" class="form-label fw-semibold">Nueva Contraseña</label>
+            <div class="input-group">
               <input type="password" class="form-control" id="password" name="password" placeholder="Dejar vacío si no deseas cambiarla">
+              <button class="btn bg-transparent border text-muted" type="button" id="toggle-password">
+                <i class="ti ti-eye"></i>
+              </button>
             </div>
-            
-            <div class="col-md-6 mb-3">
-              <label for="password_confirm" class="form-label fw-semibold">Confirmar Contraseña</label>
+          </div>
+          
+          <div class="mb-3">
+            <label for="password_confirm" class="form-label fw-semibold">Confirmar Contraseña</label>
+            <div class="input-group">
               <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Repite la nueva contraseña">
+              <button class="btn bg-transparent border text-muted" type="button" id="toggle-password-confirm">
+                <i class="ti ti-eye"></i>
+              </button>
             </div>
           </div>
 
@@ -108,14 +112,36 @@
      SCRIPT DE PREVISUALIZACIÓN DE IMAGEN
      ===================================================================== -->
 <script>
-function previewImage(event) {
+  function previewImage(event) {
     const reader = new FileReader();
     reader.onload = function(){
-        const output = document.getElementById('avatar-preview');
-        output.src = reader.result;
+      const output = document.getElementById('avatar-preview');
+      output.src = reader.result;
     };
-    if(event.target.files[0]) {
-        reader.readAsDataURL(event.target.files[0]);
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    // Toggle para Nueva Contraseña
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.innerHTML = type === 'password' ? '<i class="ti ti-eye"></i>' : '<i class="ti ti-eye-off"></i>';
+      });
     }
-}
+
+    // Toggle para Confirmar Contraseña
+    const togglePasswordConfirm = document.getElementById('toggle-password-confirm');
+    const passwordConfirmInput = document.getElementById('password_confirm');
+    if (togglePasswordConfirm && passwordConfirmInput) {
+      togglePasswordConfirm.addEventListener('click', function () {
+        const type = passwordConfirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordConfirmInput.setAttribute('type', type);
+        this.innerHTML = type === 'password' ? '<i class="ti ti-eye"></i>' : '<i class="ti ti-eye-off"></i>';
+      });
+    }
+  });
 </script>
