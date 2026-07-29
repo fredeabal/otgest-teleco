@@ -62,9 +62,9 @@
                     <tbody>
                         <?php if (empty($files)): ?>
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">
-                                    <i class="ti ti-folder-off fs-8 d-block mb-2"></i>
-                                    No se encontraron archivos compartidos.
+                                <td colspan="6" class="text-center py-4">
+                                    <i class="ti ti-folder-off fs-10 d-block mb-2 text-muted"></i>
+                                    <span class="fw-semibold text-muted">No se encontraron archivos compartidos.</span>
                                 </td>
                             </tr>
                         <?php else: ?>
