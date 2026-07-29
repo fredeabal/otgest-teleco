@@ -14,6 +14,9 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     $routes->get('profile', 'ProfileController::index');
     $routes->post('profile/update', 'ProfileController::update');
 
+    // Guía
+    $routes->get('guide', 'GuideController::index');
+
     // Gestión de Archivos Compartidos (FileCrew)
     $routes->get('files', 'FileShareController::index');
     $routes->get('files/upload', 'FileShareController::upload');
