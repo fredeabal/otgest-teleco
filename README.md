@@ -38,6 +38,13 @@ FileCrew utiliza el servicio de correo para enviar enlaces de descarga directame
 2. Introduce los datos de tu servidor de correo (Host, Puerto, Usuario, Contraseña y tipo de encriptación TLS/SSL).
 3. Utiliza la opción **Enviar Correo de Prueba** para verificar que la configuración sea correcta.
 
+#### 🔧 Archivo de Configuración Global (.env)
+El archivo `.env` se encuentra en la raíz de la instalación y almacena las variables principales del sistema (como la URL base del sitio `app.baseURL`, la ubicación de la base de datos SQLite y el entorno de ejecución). Puedes editarlo en cualquier momento desde la terminal mediante el comando:
+
+```bash
+nano /var/www/filecrew/.env
+```
+
 ---
 
 ## 🔄 Actualizar a la última versión
