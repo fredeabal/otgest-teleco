@@ -48,14 +48,16 @@
                             <!-- Bloque de información del archivo NUEVO seleccionado -->
                             <div class="mt-3 d-none" id="file-info-block-new">
                                 <div class="p-3 bg-light-primary rounded d-flex align-items-center justify-content-between border border-primary">
-                                    <div class="d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center gap-3 flex-grow-1 me-3">
                                         <div class="p-2 bg-primary text-white rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                             <i class="ti ti-file-upload fs-5"></i>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0 fw-semibold text-truncate text-primary" id="info-filename" style="max-width: 300px;">nombre_archivo.zip</h6>
-                                            <small class="text-muted" id="info-filesize">0 KB</small>
-                                            <span class="badge bg-primary ms-2">Reemplazará al actual</span>
+                                        <div class="flex-grow-1 d-flex flex-wrap align-items-center justify-content-between gap-2">
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-truncate text-primary" id="info-filename" style="max-width: 300px;">nombre_archivo.zip</h6>
+                                                <small class="text-muted" id="info-filesize">0 KB</small>
+                                            </div>
+                                            <span class="badge bg-primary badge-replace-file">Reemplazará al actual</span>
                                         </div>
                                     </div>
                                     <button type="button" class="btn-close" id="btn-clear-file" aria-label="Limpiar"></button>

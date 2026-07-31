@@ -129,7 +129,7 @@
                                             <h6 class="fs-3 fw-semibold mb-0"><?= date('d/m/Y', $expiresAt) ?></h6>
                                             <span class="fw-normal text-muted text-login-time"><?= date('H:i', $expiresAt) ?></span>
                                         <?php else: ?>
-                                            <h6 class="fs-3 fw-semibold mb-0 text-muted">Permanente</h6>
+                                            <h6 class="fs-3 fw-semibold mb-0 text-muted">Nunca</h6>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-end" onclick="event.stopPropagation();">

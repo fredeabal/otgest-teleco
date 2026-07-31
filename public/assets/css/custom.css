@@ -601,3 +601,11 @@
     justify-content: center;
     border-radius: 50%;
 }
+
+/* --- Badge de reemplazo de archivo --- */
+.badge-replace-file {
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}

@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="col-6">
                                     <span class="fw-semibold d-block text-dark">Caducidad:</span>
-                                    <span class="text-muted"><?= !empty($share->expires_at) ? date('d/m/Y H:i', strtotime($share->expires_at)) : 'Permanente' ?></span>
+                                    <span class="text-muted"><?= !empty($share->expires_at) ? date('d/m/Y H:i', strtotime($share->expires_at)) : 'Nunca' ?></span>
                                 </div>
                                 <?php if (!empty($fileHash)): ?>
                                     <div class="col-12 mt-4 pt-3 border-top">
