@@ -90,11 +90,13 @@
                                 <tr class="cursor-pointer" onclick="window.location='<?= base_url('files/edit/' . $file->id) ?>'">
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="p-2 bg-light-primary rounded text-primary d-none d-sm-flex align-items-center justify-content-center network-icon-circle">
-                                                <i class="ti ti-file-text fs-6"></i>
+                                            <div class="p-2 <?= !empty($file->password) ? 'bg-light-warning text-warning' : 'bg-light-primary text-primary' ?> rounded d-none d-sm-flex align-items-center justify-content-center network-icon-circle">
+                                                <i class="ti <?= !empty($file->password) ? 'ti-lock' : 'ti-file-text' ?> fs-6"></i>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-truncate file-name-truncate"><?= esc($file->filename) ?></h6>
+                                                <h6 class="mb-0 fw-semibold text-truncate file-name-truncate">
+                                                    <?= esc($file->filename) ?>
+                                                </h6>
                                                 <small class="text-muted fw-bold"><?= esc(strtoupper(pathinfo($file->filename, PATHINFO_EXTENSION) ?: 'ARCHIVO')) ?></small>
                                             </div>
                                         </div>
@@ -136,6 +138,11 @@
                                                 <i class="ti ti-dots-vertical fs-5"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a href="<?= base_url('files/download/' . $file->id) ?>" class="dropdown-item d-flex align-items-center gap-2">
+                                                        <i class="ti ti-download"></i> Descargar
+                                                    </a>
+                                                </li>
                                                 <li>
                                                     <a href="<?= base_url('files/edit/' . $file->id) ?>" class="dropdown-item d-flex align-items-center gap-2">
                                                         <i class="ti ti-pencil"></i> Editar

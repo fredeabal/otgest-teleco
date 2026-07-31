@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <h3 class="card-title mb-0 fw-semibold"><?= esc($spaceUsed ?? '0 MB') ?></h3>
-                <p class="card-text text-muted fs-2 mt-2">De un máximo disponible de 10 GB.</p>
+                <p class="card-text text-muted fs-2 mt-2">Espacio total de tus archivos subidos.</p>
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
         <div class="card border shadow-none h-100">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h6 class="card-subtitle text-muted mb-0">Descargas Recibidas</h6>
+                    <h6 class="card-subtitle text-muted mb-0">Descargas Visualizadas</h6>
                     <div class="bg-info-subtle text-info rounded p-2">
                         <i class="ti ti-download fs-6"></i>
                     </div>

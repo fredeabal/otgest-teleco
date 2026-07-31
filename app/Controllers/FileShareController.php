@@ -570,6 +570,33 @@ class FileShareController extends BaseController
     }
 
     // ---------------------------------------------------------------------
+    // Descarga directa para el propietario del archivo (sin restricciones de clave/límite)
+    // ---------------------------------------------------------------------
+    public function ownerDownload($id)
+    {
+        $share = $this->fileShareModel->find($id);
+
+        if (!$share) {
+            return redirect()->back()->with('error', 'Archivo no encontrado.');
+        }
+
+        // Verificar que pertenezca al usuario autenticado, o sea administrador
+        $user = auth()->user();
+        if ($share->user_id !== $user->id && !$user->inGroup('superadmin', 'supervisor')) {
+            return redirect()->back()->with('error', 'No tienes permiso para descargar este archivo.');
+        }
+
+        $filePath = WRITEPATH . 'uploads/files/' . $share->storage_name;
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'El archivo no existe físicamente en el servidor.');
+        }
+
+        // Retornar archivo como stream de descarga
+        return $this->response->download($filePath, null)->setFileName($share->filename);
+    }
+
+    // ---------------------------------------------------------------------
     // Función auxiliar para eliminar el archivo físicamente y en BD
     // ---------------------------------------------------------------------
     private function destroyFileShare($share)

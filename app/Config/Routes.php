@@ -22,6 +22,7 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     $routes->get('files/upload', 'FileShareController::upload');
     $routes->post('files/store', 'FileShareController::store');
     $routes->get('files/edit/(:num)', 'FileShareController::edit/$1');
+    $routes->get('files/download/(:num)', 'FileShareController::ownerDownload/$1');
     $routes->post('files/update/(:num)', 'FileShareController::update/$1');
     $routes->post('files/delete/(:num)', 'FileShareController::delete/$1');
     $routes->post('files/send-email/(:num)', 'FileShareController::sendEmail/$1');
