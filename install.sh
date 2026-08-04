@@ -40,8 +40,19 @@ echo -e "${NC}"
 
 # 2. Detectar IP pública o interfaz de red del servidor
 SERVER_IP=$(hostname -I | awk '{print $1}')
-read -p "👉 Ingresa la IP o Dominio del servidor [Predeterminado: ${SERVER_IP}]: " INPUT_DOMAIN
+read -p "👉 Ingresa la IP o Dominio del servidor (ej. otgest.com o https://otgest.com) [Predeterminado: ${SERVER_IP}]: " INPUT_DOMAIN
 DOMAIN=${INPUT_DOMAIN:-$SERVER_IP}
+
+# Extraer el protocolo (por defecto http)
+if [[ "$DOMAIN" =~ ^https:// ]]; then
+    PROTOCOL="https"
+else
+    PROTOCOL="http"
+fi
+
+# Limpiar el dominio para Nginx (eliminar http://, https:// y barras diagonales finales)
+CLEAN_DOMAIN=$(echo "$DOMAIN" | sed -e 's|^[^/]*//||' -e 's|/.*$||')
+
 
 echo -e "\n${YELLOW}⏳ [1/6] Actualizando paquetes e instalando dependencias del sistema...${NC}"
 export DEBIAN_FRONTEND=noninteractive
@@ -108,8 +119,8 @@ DB_PATH="${DB_DIR}/database.db"
 # Ajustar valores en .env
 sed -i "s|# CI_ENVIRONMENT = .*|CI_ENVIRONMENT = development|g" .env
 sed -i "s|CI_ENVIRONMENT = .*|CI_ENVIRONMENT = development|g" .env
-sed -i "s|# app.baseURL = .*|app.baseURL = 'http://${DOMAIN}/'|g" .env
-sed -i "s|app.baseURL = .*|app.baseURL = 'http://${DOMAIN}/'|g" .env
+sed -i "s|# app.baseURL = .*|app.baseURL = '${PROTOCOL}://${CLEAN_DOMAIN}/'|g" .env
+sed -i "s|app.baseURL = .*|app.baseURL = '${PROTOCOL}://${CLEAN_DOMAIN}/'|g" .env
 sed -i "s|# database.default.hostname = .*|database.default.hostname = localhost|g" .env
 sed -i "s|# database.default.database = .*|database.default.database = ${DB_PATH}|g" .env
 sed -i "s|# database.default.DBDriver = .*|database.default.DBDriver = SQLite3|g" .env
@@ -137,7 +148,7 @@ PHP_SOCK="/var/run/php/php${PHP_VER}-fpm.sock"
 cat <<EOF > /etc/nginx/sites-available/otgest
 server {
     listen 80;
-    server_name ${DOMAIN};
+    server_name ${CLEAN_DOMAIN};
 
     root ${INSTALL_DIR}/public;
     index index.php index.html index.htm;
@@ -186,7 +197,7 @@ echo "======================================================================"
 echo "         🎉 ¡INSTALACIÓN DE OTGEST COMPLETADA CON ÉXITO!              "
 echo "======================================================================"
 echo -e "${NC}"
-echo -e "👉 **Acceso Web:** http://${DOMAIN}"
+echo -e "👉 **Acceso Web:** ${PROTOCOL}://${CLEAN_DOMAIN}"
 echo -e "👉 **Usuario Admin:** admin@demo.com"
 echo -e "👉 **Contraseña:** admin1234"
 echo -e "----------------------------------------------------------------------"
