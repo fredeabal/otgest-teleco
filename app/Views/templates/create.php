@@ -31,7 +31,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form action="<?= site_url('templates/store') ?>" method="post">
+                <form action="<?= site_url('templates/store') ?>" method="post" autocomplete="off">
                     <?= csrf_field() ?>
                     <div class="mb-3">
                         <label for="plantilla_nombre" class="form-label">Nombre de la plantilla</label>

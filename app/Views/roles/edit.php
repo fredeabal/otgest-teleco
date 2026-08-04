@@ -28,7 +28,7 @@
          ===================================================================== -->
     <div class="row">
         <div class="col-12">
-            <form action="<?= base_url('roles/update/' . esc($groupName)) ?>" method="POST">
+            <form action="<?= base_url('roles/update/' . esc($groupName)) ?>" method="POST" autocomplete="off">
                 <?= csrf_field() ?>
 
                 <div class="card">

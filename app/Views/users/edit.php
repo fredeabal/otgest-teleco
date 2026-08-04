@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="card">
             <div class="card-body">
 
-                <form action="<?= url_to('\App\Controllers\UsersController::update', $user->id) ?>" method="post">
+                <form action="<?= url_to('\App\Controllers\UsersController::update', $user->id) ?>" method="post" autocomplete="off">
                     <?= csrf_field() ?>
                     <div class="mb-3">
                         <label for="username" class="form-label">Nombre de Usuario</label>

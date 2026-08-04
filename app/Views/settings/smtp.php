@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="<?= base_url('settings/smtp/update') ?>" method="POST">
+                    <form action="<?= base_url('settings/smtp/update') ?>" method="POST" autocomplete="off">
                         <?= csrf_field() ?>
 
                         <div class="row mb-3">

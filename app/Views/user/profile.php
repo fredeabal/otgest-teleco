@@ -29,7 +29,7 @@
         <div class="card">
             <div class="card-body">
 
-        <form action="<?= base_url('profile/update') ?>" method="POST" enctype="multipart/form-data">
+        <form action="<?= base_url('profile/update') ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
           <?= csrf_field() ?>
 
           <div class="text-center mb-4">
