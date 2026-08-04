@@ -103,7 +103,7 @@
                         </li>
                         <li class="d-flex align-items-start gap-2 mb-3">
                             <i class="ti ti-circle-check text-primary fs-5 mt-1"></i>
-                            <span><strong class="text-primary">Liberación de espacio:</strong> Al eliminar manualmente un enlace en la tabla principal, FileCrew se encarga de borrar el archivo físico del disco de forma irreversible.</span>
+                            <span><strong class="text-primary">Liberación de espacio:</strong> Al eliminar manualmente un enlace en la tabla principal, el sistema se encarga de borrar el archivo físico del disco de forma irreversible.</span>
                         </li>
                         <li class="d-flex align-items-start gap-2">
                             <i class="ti ti-circle-check text-primary fs-5 mt-1"></i>

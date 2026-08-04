@@ -84,7 +84,7 @@ class MaintenanceController extends BaseController
             return redirect()->to(base_url('settings/maintenance'))->with('error', 'El archivo de base de datos no existe.');
         }
 
-        $filename = 'backup-filecrew-' . date('Y-m-d_H-i-s') . '.db';
+        $filename = 'backup-otgest-' . date('Y-m-d_H-i-s') . '.db';
         $tempBackupPath = sys_get_temp_dir() . '/' . $filename;
 
         // Crear una copia segura usando VACUUM INTO para evitar corrupción si hay escrituras concurrentes

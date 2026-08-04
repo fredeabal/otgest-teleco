@@ -107,7 +107,7 @@ class UsersController extends BaseController
             ],
             'username' => [
                 'label' => 'nombre de usuario',
-                'rules' => 'required|alpha_numeric_space|min_length[3]|is_unique[users.username]|not_in_list[filecrew,root,admin,system]',
+                'rules' => 'required|alpha_numeric_space|min_length[3]|is_unique[users.username]|not_in_list[otgest,root,admin,system]',
                 'errors' => [
                     'is_unique' => 'El nombre de usuario ya está en uso.',
                     'not_in_list' => 'Este nombre de usuario no está permitido.'
@@ -207,7 +207,7 @@ class UsersController extends BaseController
         $rules = [
             'username' => [
                 'label' => 'nombre de usuario',
-                'rules' => 'required|alpha_numeric_space|min_length[3]|is_unique[users.username,id,' . $id . ']|not_in_list[filecrew,root]',
+                'rules' => 'required|alpha_numeric_space|min_length[3]|is_unique[users.username,id,' . $id . ']|not_in_list[otgest,root]',
                 'errors' => [
                     'is_unique' => 'El nombre de usuario ya está en uso.',
                     'not_in_list' => 'Este nombre de usuario no está permitido.'

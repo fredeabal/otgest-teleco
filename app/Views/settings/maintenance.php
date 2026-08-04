@@ -23,19 +23,51 @@
          ===================================================================== -->
     <div class="row">
         <!-- Tarjeta de Mantenimiento General -->
-        <div class="col-12 mb-4">
-            <div class="card border bg-light-primary">
-                <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-none border">
+                <div class="card-body d-flex flex-column justify-content-between">
                     <div>
-                        <h5 class="card-title fw-bold text-primary mb-1">Mantenimiento Completo</h5>
-                        <p class="card-text text-muted mb-0">Ejecuta todas las acciones de limpieza simultáneamente (sesiones inactivas, debugs y logs).</p>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="p-2 rounded bg-light-primary text-primary d-flex align-items-center justify-content-center">
+                                <i class="ti ti-eraser fs-7"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Mantenimiento Completo</h5>
+                        </div>
+                        <p class="text-muted">Ejecuta todas las acciones de limpieza simultáneamente (sesiones inactivas, debugs y logs).</p>
                     </div>
-                    <form action="<?= base_url('settings/maintenance/clear-all') ?>" method="POST" class="d-inline">
-                        <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-primary px-4 py-2">
-                            Ejecutar Mantenimiento Completo
-                        </button>
-                    </form>
+                    <div class="mt-3">
+                        <form action="<?= base_url('settings/maintenance/clear-all') ?>" method="POST">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="btn btn-primary w-100">
+                             Ejecutar Mantenimiento Completo
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optimizar Base de Datos -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-none border">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="p-2 rounded bg-light-primary text-primary d-flex align-items-center justify-content-center">
+                                <i class="ti ti-database-export fs-7"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Optimizar Base de Datos</h5>
+                        </div>
+                        <p class="text-muted">Desfragmenta y comprime la base de datos SQLite (VACUUM) para liberar espacio en disco y mejorar el rendimiento y tiempos de respuesta del panel.</p>
+                    </div>
+                    <div class="mt-3">
+                        <form action="<?= base_url('settings/maintenance/optimize-db') ?>" method="POST">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="btn btn-primary w-100">
+                             Ejecutar Optimización
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,111 +128,7 @@
             </div>
         </div>
 
-        <!-- Optimizar Base de Datos -->
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-none border">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="p-2 rounded bg-light-primary text-primary d-flex align-items-center justify-content-center">
-                                <i class="ti ti-database-export fs-7"></i>
-                            </div>
-                            <h5 class="fw-bold mb-0">Optimizar Base de Datos</h5>
-                        </div>
-                        <p class="text-muted">Desfragmenta y comprime la base de datos SQLite (VACUUM) para liberar espacio en disco y mejorar el rendimiento y tiempos de respuesta del panel.</p>
-                    </div>
-                    <div class="mt-3">
-                        <form action="<?= base_url('settings/maintenance/optimize-db') ?>" method="POST">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-primary w-100">
-                             Ejecutar Optimización
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-
-
-        <!-- ================= SECCIÓN: SISTEMA Y REGISTROS ================= -->
-
-        <!-- Sesiones inactivas -->
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-none border">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="p-2 rounded bg-light-info text-info d-flex align-items-center justify-content-center">
-                                <i class="ti ti-users fs-7"></i>
-                            </div>
-                            <h5 class="fw-bold mb-0">Sesiones de Usuario</h5>
-                        </div>
-                        <p class="text-muted">Elimina archivos de sesión antiguos y temporales del servidor. Tu sesión activa actual se conservará para evitar que seas desconectado.</p>
-                    </div>
-                    <div class="mt-3">
-                        <form action="<?= base_url('settings/maintenance/clear-sessions') ?>" method="POST">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-info w-100">
-                             Limpiar Sesiones
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Debugbar -->
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-none border">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="p-2 rounded bg-light-danger text-danger d-flex align-items-center justify-content-center">
-                                <i class="ti ti-bug fs-7"></i>
-                            </div>
-                            <h5 class="fw-bold mb-0">Debugbar de CodeIgniter</h5>
-                        </div>
-                        <p class="text-muted">Vacía la caché y los archivos generados por la barra de herramientas de depuración (Debugbar) para liberar espacio en disco.</p>
-                    </div>
-                    <div class="mt-3">
-                        <form action="<?= base_url('settings/maintenance/clear-debugbar') ?>" method="POST">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-danger w-100">
-                             Limpiar Debugbar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Logs del Sistema -->
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-none border">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="p-2 rounded bg-light-success text-success d-flex align-items-center justify-content-center">
-                                <i class="ti ti-file-text fs-7"></i>
-                            </div>
-                            <h5 class="fw-bold mb-0">Logs del Sistema</h5>
-                        </div>
-                        <p class="text-muted">Elimina los archivos históricos de registro de errores de CodeIgniter que se acumulan en la carpeta writable.</p>
-                    </div>
-                    <div class="mt-3">
-                        <form action="<?= base_url('settings/maintenance/clear-logs') ?>" method="POST">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-success w-100">
-                             Limpiar Historial de Logs
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {

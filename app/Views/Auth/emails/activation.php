@@ -48,7 +48,7 @@
                     <tr>
                         <td align="center" style="padding: 0 20px;">
                             <p style="color: #8c98a4; -webkit-text-fill-color: #8c98a4; font-size: 11px; line-height: 1.5; margin: 0;">
-                                &copy; <?= date('Y') ?> FileCrew
+                                &copy; <?= date('Y') ?> OtGest
                             </p>
                         </td>
                     </tr>

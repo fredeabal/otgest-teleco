@@ -8,11 +8,11 @@
    la paleta de colores de toda la aplicación.
    ============================================= */
 :root, [data-bs-theme="dark"] {
-    /* Color Principal (Botones primarios, enlaces activos, etc. - Cloudflare Orange) */
-    --bs-primary: #F38020 !important;
-    --bs-primary-rgb: 243, 128, 32 !important;
-    --bs-primary-bg-subtle: rgba(243, 128, 32, 0.15) !important;
-    --bs-primary-text-emphasis: #c4600e !important;
+    /* Color Principal (Botones primarios, enlaces activos, etc. - Purple) */
+    --bs-primary: #7267EF !important;
+    --bs-primary-rgb: 114, 103, 239 !important;
+    --bs-primary-bg-subtle: rgba(114, 103, 239, 0.15) !important;
+    --bs-primary-text-emphasis: #5b52bf !important;
 
     /* Color Secundario */
     --bs-secondary: #49beff !important;
@@ -383,7 +383,7 @@
 }
 
 .text-gradient {
-    background: linear-gradient(135deg, var(--bs-primary) 0%, #ff9e4f 100%);
+    background: linear-gradient(135deg, var(--bs-primary) 0%, #8B82F0 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -524,7 +524,7 @@
 }
 
 .landing-btn-primary-gradient {
-    background: linear-gradient(135deg, var(--bs-primary) 0%, #ff9e4f 100%) !important;
+    background: linear-gradient(135deg, var(--bs-primary) 0%, #8B82F0 100%) !important;
     border: none !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
@@ -608,4 +608,33 @@
     font-weight: 700 !important;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+}
+
+/* =============================================
+   Dashboard Card Colors & Icons
+   ============================================= */
+.bg-card-instalaciones { background-color: #38c8cd !important; color: white !important; border: none !important; }
+.bg-card-averias { background-color: #fca02d !important; color: white !important; border: none !important; }
+.bg-card-modificaciones { background-color: #4cd599 !important; color: white !important; border: none !important; }
+.bg-card-traslados { background-color: #a07adc !important; color: white !important; border: none !important; }
+.bg-card-portabilidad { background-color: #f7589c !important; color: white !important; border: none !important; }
+.bg-card-bajas { background-color: #8c81eb !important; color: white !important; border: none !important; }
+.bg-card-auditorias { background-color: #fe9b4b !important; color: white !important; border: none !important; }
+.bg-card-total { background-color: #fa8f8d !important; color: white !important; border: none !important; }
+
+/* Dashboard Watermark Icon */
+.dashboard-card-icon {
+    position: absolute;
+    right: -10px;
+    bottom: -15px;
+    font-size: 100px;
+    opacity: 0.2;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(-10deg);
+}
+
+.dashboard-card-content {
+    position: relative;
+    z-index: 1;
 }

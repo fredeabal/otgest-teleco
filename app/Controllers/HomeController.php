@@ -5,7 +5,7 @@ namespace App\Controllers;
 class HomeController extends BaseController
 {
     // ---------------------------------------------------------------------
-    // Método principal: Redirecciona al login o dashboard de FileCrew
+    // Método principal: Redirecciona al login o dashboard de OtGest
     // ---------------------------------------------------------------------
     public function index()
     {

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # =================================================================================
-# FILECREW - AUTOMATIC UPDATER SCRIPT
+# OTGEST - AUTOMATIC UPDATER SCRIPT
 # =================================================================================
-# Este script descarga e instala la última versión de FileCrew sin perder datos.
+# Este script descarga e instala la última versión de OtGest sin perder datos.
 # =================================================================================
 
 # Si se ejecuta mediante curl/pipe, guardar en un archivo temporal y reconectar la terminal
-if [ ! -t 0 ] && [ -z "$FILECREW_SELF_RUN" ]; then
-    TMP_SCRIPT=$(mktemp /tmp/filecrew_update.XXXXXX.sh)
+if [ ! -t 0 ] && [ -z "$OTGEST_SELF_RUN" ]; then
+    TMP_SCRIPT=$(mktemp /tmp/otgest_update.XXXXXX.sh)
     cat > "$TMP_SCRIPT"
     chmod +x "$TMP_SCRIPT"
-    export FILECREW_SELF_RUN=1
+    export OTGEST_SELF_RUN=1
     exec "$TMP_SCRIPT" "$@" < /dev/tty
 fi
 
@@ -22,7 +22,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo -e "${BLUE}======================================================================${NC}"
-echo -e "${GREEN}             🚀 FILECREW - ACTUALIZADOR AUTOMÁTICO 🚀            ${NC}"
+echo -e "${GREEN}             🚀 OTGEST - ACTUALIZADOR AUTOMÁTICO 🚀            ${NC}"
 echo -e "${BLUE}======================================================================${NC}"
 echo ""
 
@@ -32,10 +32,10 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# 2. Verificar si FileCrew está instalado
-INSTALL_DIR="/var/www/filecrew"
+# 2. Verificar si OtGest está instalado
+INSTALL_DIR="/var/www/otgest"
 if [ ! -d "$INSTALL_DIR" ]; then
-  echo -e "${RED}¡ERROR! No se encontró una instalación de FileCrew en ${INSTALL_DIR}.${NC}"
+  echo -e "${RED}¡ERROR! No se encontró una instalación de OtGest en ${INSTALL_DIR}.${NC}"
   echo -e "Si aún no lo has instalado, utiliza el instalador primero."
   exit 1
 fi
@@ -86,6 +86,6 @@ echo ""
 echo -e "${GREEN}======================================================================${NC}"
 echo -e "${GREEN}  ✅ ACTUALIZACIÓN COMPLETADA CON ÉXITO                             ${NC}"
 echo -e "${GREEN}======================================================================${NC}"
-echo -e "Tu servidor FileCrew ya está en la última versión."
+echo -e "Tu servidor OtGest ya está en la última versión."
 echo -e "Tus configuraciones, archivos y usuarios están a salvo."
 echo -e "${BLUE}======================================================================${NC}"

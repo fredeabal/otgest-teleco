@@ -99,7 +99,7 @@
           </div>
 
           <div class="d-flex justify-content-center mt-5">
-            <a href="<?= base_url('dashboard') ?>" class="btn btn-danger px-4 me-2">
+            <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-primary px-4 me-2">
                 <i class="ti ti-x me-1"></i>Cancelar
             </a>
             <button type="submit" class="btn btn-primary px-4">

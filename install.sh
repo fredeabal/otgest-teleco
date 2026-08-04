@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# 🚀 FILECREW - SCRIPT DE INSTALACIÓN AUTOMÁTICA
+# 🚀 OTGEST - SCRIPT DE INSTALACIÓN AUTOMÁTICA
 # ==============================================================================
 # Este script automatiza la instalación de dependencias, configuración de Nginx,
-# base de datos SQLite, migraciones, semillas y permisos para desplegar FileCrew en Linux.
+# base de datos SQLite, migraciones, semillas y permisos para desplegar OtGest en Linux.
 # ==============================================================================
 
 set -e
 
 # Si se ejecuta mediante curl/pipe, guardar en un archivo temporal y reconectar la terminal
-if [ ! -t 0 ] && [ -z "$FILECREW_SELF_RUN" ]; then
-    TMP_SCRIPT=$(mktemp /tmp/filecrew_install.XXXXXX.sh)
+if [ ! -t 0 ] && [ -z "$OTGEST_SELF_RUN" ]; then
+    TMP_SCRIPT=$(mktemp /tmp/otgest_install.XXXXXX.sh)
     cat > "$TMP_SCRIPT"
     chmod +x "$TMP_SCRIPT"
-    export FILECREW_SELF_RUN=1
+    export OTGEST_SELF_RUN=1
     exec "$TMP_SCRIPT" "$@" < /dev/tty
 fi
 
@@ -34,7 +34,7 @@ fi
 clear
 echo -e "${BLUE}"
 echo "======================================================================"
-echo "         🚀 BIENVENIDO AL INSTALADOR AUTOMÁTICO DE FILECREW           "
+echo "         🚀 BIENVENIDO AL INSTALADOR AUTOMÁTICO DE OTGEST             "
 echo "======================================================================"
 echo -e "${NC}"
 
@@ -56,16 +56,16 @@ if ! command -v composer &> /dev/null; then
 fi
 
 # 3. Directorio de instalación
-INSTALL_DIR="/var/www/filecrew"
+INSTALL_DIR="/var/www/otgest"
 
 if [ ! -f "./spark" ]; then
-    echo -e "${YELLOW}⏳ [2/6] Descargando el código de FileCrew desde GitHub...${NC}"
+    echo -e "${YELLOW}⏳ [2/6] Descargando el código de OtGest desde GitHub...${NC}"
     if [ -d "$INSTALL_DIR" ]; then
         # Limpiar si ya existe para evitar conflictos al clonar.
         cd /tmp
         rm -rf "$INSTALL_DIR"
     fi
-    git clone https://github.com/fredeabal/filecrew.git "$INSTALL_DIR"
+    git clone https://github.com/fredeabal/otgest-teleco.git "$INSTALL_DIR"
 else
     echo -e "${YELLOW}⏳ [2/6] Preparando el directorio del proyecto en ${INSTALL_DIR}...${NC}"
     mkdir -p "$INSTALL_DIR"
@@ -78,8 +78,8 @@ cd "$INSTALL_DIR"
 if [ ! -f "composer.json" ]; then
     echo -e "\n${RED}❌ Error: No se encontraron los archivos del proyecto (composer.json no existe en ${INSTALL_DIR}).${NC}"
     echo -e "${YELLOW}Si el repositorio es PRIVADO en GitHub, ejecuta estos pasos en tu servidor:${NC}"
-    echo -e "  1. git clone https://github.com/fredeabal/filecrew.git"
-    echo -e "  2. cd filecrew"
+    echo -e "  1. git clone https://github.com/fredeabal/otgest-teleco.git otgest"
+    echo -e "  2. cd otgest"
     echo -e "  3. bash install.sh\n"
     exit 1
 fi
@@ -134,7 +134,7 @@ echo -e "\n${YELLOW}⏳ [6/6] Configurando el servidor web Nginx...${NC}"
 PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
 PHP_SOCK="/var/run/php/php${PHP_VER}-fpm.sock"
 
-cat <<EOF > /etc/nginx/sites-available/filecrew
+cat <<EOF > /etc/nginx/sites-available/otgest
 server {
     listen 80;
     server_name ${DOMAIN};
@@ -160,13 +160,13 @@ server {
         deny all;
     }
 
-    error_log  /var/log/nginx/filecrew_error.log;
-    access_log /var/log/nginx/filecrew_access.log;
+    error_log  /var/log/nginx/otgest_error.log;
+    access_log /var/log/nginx/otgest_access.log;
 }
 EOF
 
 # Activar sitio en Nginx y desactivar default
-ln -sf /etc/nginx/sites-available/filecrew /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/otgest /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 
 # Test de configuración y recarga de Nginx
@@ -183,7 +183,7 @@ chmod -R 775 "${INSTALL_DIR}/public/uploads" 2>/dev/null || true
 clear
 echo -e "${GREEN}"
 echo "======================================================================"
-echo "         🎉 ¡INSTALACIÓN DE FILECREW COMPLETADA CON ÉXITO!           "
+echo "         🎉 ¡INSTALACIÓN DE OTGEST COMPLETADA CON ÉXITO!              "
 echo "======================================================================"
 echo -e "${NC}"
 echo -e "👉 **Acceso Web:** http://${DOMAIN}"

@@ -51,7 +51,7 @@ class Validation extends BaseConfig
                 'min_length[3]',
                 'alpha_numeric_space',
                 'is_unique[users.username]',
-                'not_in_list[filecrew,root,admin,system]',
+                'not_in_list[otgest,root,admin,system]',
             ],
             'errors' => [
                 'not_in_list' => 'Este nombre de usuario no está permitido.',

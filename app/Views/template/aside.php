@@ -31,11 +31,19 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="<?= base_url('files') ?>" aria-expanded="false">
+              <a class="sidebar-link" href="<?= base_url('orders') ?>" aria-expanded="false">
                 <span>
-                  <i class="ti ti-folder"></i>
+                  <i class="ti ti-briefcase"></i>
                 </span>
-                <span class="hide-menu">Mis Archivos</span>
+                <span class="hide-menu">Órdenes (OTs)</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="<?= base_url('templates') ?>" aria-expanded="false">
+                <span>
+                  <i class="ti ti-file-text"></i>
+                </span>
+                <span class="hide-menu">Plantillas</span>
               </a>
             </li>
             <?php if (auth()->user()->can('admin.settings') || auth()->user()->can('admin.roles') || auth()->user()->can('admin.users') || auth()->user()->can('users.create')): ?>

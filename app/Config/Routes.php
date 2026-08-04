@@ -15,17 +15,28 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     $routes->post('profile/update', 'ProfileController::update');
 
     // Guía
-    $routes->get('guide', 'GuideController::index');
+    // Gestión de Órdenes de Trabajo (Orders)
+    $routes->get('orders', 'OrderController::index');
+    $routes->get('orders/create', 'OrderController::create');
+    $routes->post('orders/store', 'OrderController::store');
+    $routes->get('orders/show/(:num)', 'OrderController::show/$1');
+    $routes->get('orders/edit/(:num)', 'OrderController::edit/$1');
+    $routes->post('orders/update/(:num)', 'OrderController::update/$1');
+    $routes->post('orders/delete/(:num)', 'OrderController::delete/$1');
+    $routes->post('orders/email/(:num)', 'OrderController::sendEmail/$1');
+    $routes->post('orders/check-numero', 'OrderController::checkNumero');
 
-    // Gestión de Archivos Compartidos (FileCrew)
-    $routes->get('files', 'FileShareController::index');
-    $routes->get('files/upload', 'FileShareController::upload');
-    $routes->post('files/store', 'FileShareController::store');
-    $routes->get('files/edit/(:num)', 'FileShareController::edit/$1');
-    $routes->get('files/download/(:num)', 'FileShareController::ownerDownload/$1');
-    $routes->post('files/update/(:num)', 'FileShareController::update/$1');
-    $routes->post('files/delete/(:num)', 'FileShareController::delete/$1');
-    $routes->post('files/send-email/(:num)', 'FileShareController::sendEmail/$1');
+    // Gestión de Plantillas (Templates)
+    $routes->get('templates', 'TemplateController::index');
+    $routes->get('templates/create', 'TemplateController::create');
+    $routes->post('templates/store', 'TemplateController::store');
+    $routes->get('templates/edit/(:num)', 'TemplateController::edit/$1');
+    $routes->post('templates/update/(:num)', 'TemplateController::update/$1');
+    $routes->post('templates/delete/(:num)', 'TemplateController::delete/$1');
+
+    // Gestión de Imágenes adjuntas
+    $routes->post('images/store', 'ImageController::store');
+    $routes->post('images/delete/(:num)', 'ImageController::delete/$1');
 });
 
 // Rutas de administración (requieren permisos extra)
@@ -68,8 +79,5 @@ $routes->get('auth/logout-activated', static function () {
 // Rutas de CodeIgniter Shield
 service('auth')->routes($routes);
 
-// Rutas públicas de compartición de archivos (FileCrew)
-$routes->get('s/(:segment)', 'FileShareController::showShare/$1');
-$routes->post('s/(:segment)/verify', 'FileShareController::verifyPassword/$1');
-$routes->get('s/(:segment)/download', 'FileShareController::download/$1');
+
 

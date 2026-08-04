@@ -38,9 +38,9 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="FileCrew - Plataforma avanzada de transferencia y compartición segura de archivos." />
-  <meta name="keywords" content="FileCrew, Compartir Archivos, Enviar Archivos, Transferencia de Archivos" />
-  <meta name="author" content="FileCrew" />
+  <meta name="description" content="OtGest - Plataforma avanzada de gestión." />
+  <meta name="keywords" content="OtGest, Gestión, Órdenes de Trabajo" />
+  <meta name="author" content="OtGest" />
 
   <!-- Icono Favicon -->
   <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/') ?>images/logos/favicon.png" />
@@ -60,7 +60,7 @@
     }
   </style>
 
-  <title><?= isset($title) ? $title . ' | FileCrew' : 'FileCrew | Share Files' ?></title>
+  <title><?= isset($title) ? $title . ' | OtGest' : 'OtGest | Sistema de Gestión' ?></title>
 </head>
 
 <body>
@@ -140,14 +140,14 @@
                             </span>
                             <div class="w-100 ps-3">
                               <h6 class="mb-1 fs-3 fw-semibold lh-base">Guía de Uso</h6>
-                              <span class="fs-2 d-block text-body-secondary">Aprende a usar FileCrew</span>
+                              <span class="fs-2 d-block text-body-secondary">Aprende a usar OtGest</span>
                             </div>
                           </a>
                         </div>
                         <div class="d-grid py-4 px-7 pt-8">
                           <a href="<?= url_to('logout') ?>" class="btn btn-outline-primary w-100">Cerrar Sesión</a>
                           <div class="text-center mt-4 fs-2 text-muted">
-                            <small>FileCrew - 1.0.0</small>
+                            <small>OtGest - 1.0.0</small>
                           </div>
                         </div>
                       </div>
