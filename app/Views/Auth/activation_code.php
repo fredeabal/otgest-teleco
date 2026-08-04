@@ -34,7 +34,7 @@
                 <h2 class="mb-1 fs-7 fw-bolder text-center">Activa tu cuenta</h2>
                 <p class="mb-4 text-center text-muted">Te hemos enviado un código a tu correo electrónico. Ingrésalo a continuación para activar tu cuenta.</p>
 
-                <form action="<?= url_to('auth-action-verify') ?>" method="post" novalidate>
+                <form action="<?= url_to('auth-action-verify') ?>" method="post" novalidate autocomplete="off">
                   <?= csrf_field() ?>
 
                   <div class="mb-4">

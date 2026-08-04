@@ -16,7 +16,7 @@
         </nav>
       </div>
       <div class="col-sm-6 col-12 d-flex justify-content-sm-end align-items-center">
-        <form method="get" action="<?= base_url('dashboard') ?>" id="dashboardFilterForm">
+        <form method="get" action="<?= base_url('dashboard') ?>" id="dashboardFilterForm" autocomplete="off">
           <div class="input-group input-group-sm">
             <select name="filter" class="form-select" onchange="toggleCustomDates(this.value)" style="max-width: 180px;">
               <option value="total" <?= ($currentFilter ?? '') === 'total' ? 'selected' : '' ?>>Histórico (12 meses)</option>

@@ -36,7 +36,7 @@
 
 
 
-                <form action="<?= url_to('login') ?>" method="post" novalidate>
+                <form action="<?= url_to('login') ?>" method="post" novalidate autocomplete="off">
                   <?= csrf_field() ?>
 
                   <div class="mb-3">

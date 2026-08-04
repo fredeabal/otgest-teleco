@@ -170,7 +170,7 @@
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="<?= site_url('orders/email/' . $order['ot_id']) ?>" method="POST">
+      <form action="<?= site_url('orders/email/' . $order['ot_id']) ?>" method="POST" autocomplete="off">
         <?= csrf_field() ?>
         <div class="modal-body">
             <div class="mb-3">
@@ -196,7 +196,7 @@
                 <h5 class="modal-title" id="uploadImagesModalLabel">Adjuntar Imágenes</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?= site_url('images/store') ?>" method="post" enctype="multipart/form-data" class="dropzone" id="imagesDropzone">
+            <form action="<?= site_url('images/store') ?>" method="post" enctype="multipart/form-data" class="dropzone" id="imagesDropzone" autocomplete="off">
                 <?= csrf_field() ?>
                 <input type="hidden" name="ot_id" value="<?= $order['ot_id'] ?>">
                 <div class="dz-message needsclick text-center p-4">

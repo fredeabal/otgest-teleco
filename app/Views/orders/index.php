@@ -33,7 +33,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex flex-wrap justify-content-end align-items-center mb-4 gap-3">
-                    <form method="GET" action="<?= site_url('orders') ?>" class="d-flex align-items-center gap-2 w-100 w-md-auto search-form-responsive ms-auto">
+                    <form method="GET" action="<?= site_url('orders') ?>" class="d-flex align-items-center gap-2 w-100 w-md-auto search-form-responsive ms-auto" autocomplete="off">
                         <div class="position-relative w-100 search-box-container">
                             <input type="text" name="search" id="search-orders" class="form-control" placeholder="Buscar orden..." value="<?= isset($search) ? esc($search) : '' ?>">
                             <button type="submit" class="position-absolute top-50 translate-middle-y bg-transparent border-0 text-muted" style="left: 0.75rem; padding:0; z-index: 10;">
