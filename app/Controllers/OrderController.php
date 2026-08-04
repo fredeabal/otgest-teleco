@@ -32,12 +32,20 @@ class OrderController extends BaseController
         $query = $this->orderModel->orderBy('ot_id', 'DESC');
         
         if (!empty($search)) {
+            // Eliminar espacios de la búsqueda del usuario
+            $cleanSearch = str_replace(' ', '', $search);
+            
+            // Obtener la instancia de DB para escapar correctamente los caracteres especiales (%, _)
+            $db = \Config\Database::connect();
+            $escSearch = $db->escapeLikeString($cleanSearch);
+            $likeStr = "'%" . $escSearch . "%' ESCAPE '!'";
+
             $query->groupStart()
-                  ->like('ot_numero', $search)
-                  ->orLike('ot_cliente', $search)
-                  ->orLike('ot_direccion', $search)
-                  ->orLike('ot_tipo', $search)
-                  ->orLike('ot_txt', $search)
+                  ->where("REPLACE(ot_numero, ' ', '') LIKE $likeStr", null, false)
+                  ->orWhere("REPLACE(ot_cliente, ' ', '') LIKE $likeStr", null, false)
+                  ->orWhere("REPLACE(ot_direccion, ' ', '') LIKE $likeStr", null, false)
+                  ->orWhere("REPLACE(ot_tipo, ' ', '') LIKE $likeStr", null, false)
+                  ->orWhere("REPLACE(ot_txt, ' ', '') LIKE $likeStr", null, false)
                   ->groupEnd();
         }
 
