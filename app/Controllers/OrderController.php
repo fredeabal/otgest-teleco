@@ -37,6 +37,7 @@ class OrderController extends BaseController
                   ->orLike('ot_cliente', $search)
                   ->orLike('ot_direccion', $search)
                   ->orLike('ot_tipo', $search)
+                  ->orLike('ot_txt', $search)
                   ->groupEnd();
         }
 
