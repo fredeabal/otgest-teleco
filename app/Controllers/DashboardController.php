@@ -29,6 +29,8 @@ class DashboardController extends BaseController
             $builder->where("strftime('%Y-%m', ot_fecha)", date('Y-m'));
         } elseif ($filter === 'year') {
             $builder->where("strftime('%Y', ot_fecha)", date('Y'));
+        } elseif ($filter === '12months') {
+            $builder->where('ot_fecha >=', date('Y-m-d', strtotime('-12 months')));
         } elseif ($filter === 'custom' && $startDate && $endDate) {
             $builder->where('ot_fecha >=', $startDate);
             $builder->where('ot_fecha <=', $endDate);
@@ -87,14 +89,17 @@ class DashboardController extends BaseController
         } elseif ($filter === 'year') {
             $chartBuilder->where("strftime('%Y', ot_fecha)", date('Y'));
             $chartBuilder->select("strftime('%Y-%m', ot_fecha) as label, COUNT(*) as total");
+        } elseif ($filter === '12months') {
+            $chartBuilder->where('ot_fecha >=', date('Y-m-d', strtotime('-12 months')));
+            $chartBuilder->select("strftime('%Y-%m', ot_fecha) as label, COUNT(*) as total");
         } elseif ($filter === 'day') {
             $chartBuilder->where('ot_fecha', date('Y-m-d'));
             $chartBuilder->select("strftime('%Y-%m-%d', ot_fecha) as label, COUNT(*) as total");
             $groupBy = 'day';
         } else {
-            // Default: Total (last 12 months)
-            $chartBuilder->where('ot_fecha >=', date('Y-m-d', strtotime('-12 months')));
-            $chartBuilder->select("strftime('%Y-%m', ot_fecha) as label, COUNT(*) as total");
+            // Default: Total Histórico
+            $chartBuilder->select("strftime('%Y', ot_fecha) as label, COUNT(*) as total");
+            $groupBy = 'year';
         }
         
         $chartBuilder->groupBy('label');
@@ -111,10 +116,12 @@ class DashboardController extends BaseController
         ];
         
         foreach ($chartResults as $row) {
-            if ($groupBy === 'month') {
+            if ($groupBy === 'year') {
+                $chartLabels[] = $row['label'];
+            } elseif ($groupBy === 'month') {
                 $parts = explode('-', $row['label']);
                 if (count($parts) >= 2) {
-                    $chartLabels[] = $mesesEs[$parts[1]] . ($filter === 'total' ? ' ' . substr($parts[0], 2) : '');
+                    $chartLabels[] = $mesesEs[$parts[1]] . ($filter === '12months' || $filter === 'total' ? ' ' . substr($parts[0], 2) : '');
                 } else {
                     $chartLabels[] = $row['label'];
                 }

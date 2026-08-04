@@ -19,7 +19,8 @@
         <form method="get" action="<?= base_url('dashboard') ?>" id="dashboardFilterForm" autocomplete="off">
           <div class="input-group input-group-sm">
             <select name="filter" class="form-select" onchange="toggleCustomDates(this.value)" style="max-width: 180px;">
-              <option value="total" <?= ($currentFilter ?? '') === 'total' ? 'selected' : '' ?>>Histórico (12 meses)</option>
+              <option value="total" <?= ($currentFilter ?? '') === 'total' ? 'selected' : '' ?>>Histórico (Todo)</option>
+              <option value="12months" <?= ($currentFilter ?? '') === '12months' ? 'selected' : '' ?>>12 Meses</option>
               <option value="day" <?= ($currentFilter ?? '') === 'day' ? 'selected' : '' ?>>Hoy</option>
               <option value="month" <?= ($currentFilter ?? 'month') === 'month' ? 'selected' : '' ?>>Este Mes</option>
               <option value="year" <?= ($currentFilter ?? '') === 'year' ? 'selected' : '' ?>>Este Año</option>
@@ -165,7 +166,8 @@ document.addEventListener("DOMContentLoaded", function() {
                       'month' => 'Estadísticas (Este Mes)',
                       'year' => 'Estadísticas (Este Año)',
                       'custom' => 'Estadísticas (Periodo Personalizado)',
-                      'total' => 'Estadísticas Globales (Últimos 12 meses)'
+                      '12months' => 'Estadísticas (Últimos 12 meses)',
+                      'total' => 'Estadísticas Globales (Histórico)'
                   ];
                   $chartTitle = $titles[$currentFilter ?? 'month'] ?? 'Estadísticas Globales';
                 ?>
