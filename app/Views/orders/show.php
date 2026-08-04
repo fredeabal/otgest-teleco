@@ -230,6 +230,7 @@ function eliminarImagen(imgId, otId) {
         text: "Esta acción no se puede deshacer.",
         icon: 'warning',
         showCancelButton: true,
+        reverseButtons: true,
         customClass: {
             confirmButton: 'btn btn-danger ms-2',
             cancelButton: 'btn btn-outline-primary'
