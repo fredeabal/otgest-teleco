@@ -136,12 +136,68 @@ class MaintenanceController extends BaseController
             $sqlite = new \SQLite3($tempPath);
             // Comprobamos la existencia de las tablas básicas
             $tables = ['users', 'settings'];
+            $missingTables = [];
             foreach ($tables as $table) {
                 $check = $sqlite->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='{$table}'");
                 if (!$check) {
-                    $sqlite->close();
-                    return redirect()->back()->with('error', "La base de datos cargada no es compatible (falta la tabla '{$table}').");
+                    $missingTables[] = $table;
                 }
+            }
+
+            if (!empty($missingTables)) {
+                // Comprobar si es una base de datos antigua (legacy)
+                $legacyTables = ['ordenes', 'plantillas', 'imagenes'];
+                $isLegacy = true;
+                foreach ($legacyTables as $lt) {
+                    if (!$sqlite->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='{$lt}'")) {
+                        $isLegacy = false;
+                        break;
+                    }
+                }
+
+                if ($isLegacy) {
+                    $sqlite->close();
+                    
+                    // Proceder a importar los datos heredados
+                    $destDb = \Config\Database::connect();
+                    $destDb->query("PRAGMA foreign_keys = OFF;");
+                    $destDb->transBegin();
+
+                    try {
+                        $destDb->table('imagenes')->truncate();
+                        $destDb->table('ordenes')->truncate();
+                        $destDb->table('plantillas')->truncate();
+
+                        $sourceDb = new \SQLite3($tempPath);
+                        
+                        $res = $sourceDb->query("SELECT * FROM plantillas");
+                        while ($row = $res->fetchArray(SQLITE3_ASSOC)) { $destDb->table('plantillas')->insert($row); }
+                        
+                        $res = $sourceDb->query("SELECT * FROM ordenes");
+                        while ($row = $res->fetchArray(SQLITE3_ASSOC)) { $destDb->table('ordenes')->insert($row); }
+                        
+                        $res = $sourceDb->query("SELECT * FROM imagenes");
+                        while ($row = $res->fetchArray(SQLITE3_ASSOC)) { $destDb->table('imagenes')->insert($row); }
+
+                        $sourceDb->close();
+
+                        if ($destDb->transStatus() === false) {
+                            $destDb->transRollback();
+                            return redirect()->back()->with('error', 'Error al importar los datos heredados.');
+                        } else {
+                            $destDb->transCommit();
+                            $destDb->query("PRAGMA foreign_keys = ON;");
+                            return redirect()->to(base_url('settings/maintenance'))->with('message', '¡Base de datos antigua detectada! Se han importado correctamente las órdenes, imágenes y plantillas sin alterar el sistema actual.');
+                        }
+                    } catch (\Exception $e) {
+                        $destDb->transRollback();
+                        $destDb->query("PRAGMA foreign_keys = ON;");
+                        return redirect()->back()->with('error', 'Error durante la importación: ' . $e->getMessage());
+                    }
+                }
+
+                $sqlite->close();
+                return redirect()->back()->with('error', "La base de datos cargada no es compatible (falta la tabla '{$missingTables[0]}').");
             }
             $sqlite->close();
         } catch (\Throwable $e) {
