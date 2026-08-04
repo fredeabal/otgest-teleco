@@ -134,15 +134,6 @@
                               <span class="fs-2 d-block text-body-secondary">Ajustes de cuenta</span>
                             </div>
                           </a>
-                          <a href="<?= base_url('guide') ?>" class="py-8 px-7 d-flex align-items-center">
-                            <span class="d-flex align-items-center justify-content-center bg-light-primary rounded p-2 text-primary">
-                              <i class="ti ti-book fs-7"></i>
-                            </span>
-                            <div class="w-100 ps-3">
-                              <h6 class="mb-1 fs-3 fw-semibold lh-base">Guía de Uso</h6>
-                              <span class="fs-2 d-block text-body-secondary">Aprende a usar OtGest</span>
-                            </div>
-                          </a>
                         </div>
                         <div class="d-grid py-4 px-7 pt-8">
                           <a href="<?= url_to('logout') ?>" class="btn btn-outline-primary w-100">Cerrar Sesión</a>
