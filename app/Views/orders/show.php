@@ -230,8 +230,11 @@ function eliminarImagen(imgId, otId) {
         text: "Esta acción no se puede deshacer.",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: 'var(--bs-danger)',
-        cancelButtonColor: 'var(--bs-secondary)',
+        customClass: {
+            confirmButton: 'btn btn-danger ms-2',
+            cancelButton: 'btn btn-outline-primary'
+        },
+        buttonsStyling: false,
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar',
         background: 'var(--bs-card-bg)',

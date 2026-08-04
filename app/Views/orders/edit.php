@@ -168,8 +168,11 @@ function confirmarEliminacion(id) {
         text: "¡ATENCIÓN! Se eliminarán también todas las imágenes asociadas. Esta acción no se puede deshacer.",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: 'var(--bs-primary)',
-        cancelButtonColor: 'var(--bs-danger)',
+        customClass: {
+            confirmButton: 'btn btn-danger ms-2',
+            cancelButton: 'btn btn-outline-primary'
+        },
+        buttonsStyling: false,
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar',
         background: 'var(--bs-card-bg)',

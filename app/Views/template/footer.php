@@ -100,7 +100,7 @@
           reverseButtons: true,
           customClass: {
             confirmButton: 'btn btn-primary ms-2',
-            cancelButton: 'btn btn-danger'
+            cancelButton: 'btn btn-outline-primary'
           },
           buttonsStyling: false,
           confirmButtonText: 'Sí, confirmar',
@@ -134,7 +134,7 @@
             reverseButtons: true,
             customClass: {
               confirmButton: 'btn btn-primary ms-2',
-              cancelButton: 'btn btn-danger'
+              cancelButton: 'btn btn-outline-primary'
             },
             buttonsStyling: false,
             confirmButtonText: 'Sí, confirmar',
