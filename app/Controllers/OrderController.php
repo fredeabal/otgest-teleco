@@ -328,7 +328,7 @@ class OrderController extends BaseController
         <tr>
             <td align="center">
                 <img src="' . $logoUrl . '" alt="Logo" style="max-width: 180px; margin-bottom: 30px; display: block;">
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 500px; background-color: #f8f9fa; background-image: linear-gradient(#f8f9fa, #f8f9fa); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e9ecef;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8f9fa; background-image: linear-gradient(#f8f9fa, #f8f9fa); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e9ecef;">
                     <tr>
                         <td align="left" style="padding: 40px;">
                             <h2 style="color: #333f52; -webkit-text-fill-color: #333f52; margin-top: 0; text-align: center; font-weight: 600;">Detalles de Orden de Trabajo</h2>
@@ -346,7 +346,7 @@ class OrderController extends BaseController
                         </td>
                     </tr>
                 </table>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 500px; margin-top: 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px;">
                     <tr>
                         <td align="center" style="padding: 0 20px;">
                             <p style="color: #8c98a4; -webkit-text-fill-color: #8c98a4; font-size: 11px; line-height: 1.5; margin: 0;">
