@@ -34,7 +34,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form action="<?= site_url('orders/update/' . $order['ot_id']) ?>" method="post" autocomplete="off">
+                <form action="<?= site_url('orders/update/' . $order['ot_id']) ?>" method="post" autocomplete="off" id="orderForm">
                     <?= csrf_field() ?>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -128,14 +128,14 @@
                     </div>
 
                     <div class="d-flex justify-content-center mt-4 gap-2 border-top pt-4">
-                        <a href="<?= site_url('orders') ?>" class="btn btn-outline-primary px-4 me-2">
-                            <i class="ti ti-arrow-left me-1"></i>Volver
+                        <a href="<?= site_url('orders') ?>" class="btn btn-outline-primary px-4">
+                            <i class="ti ti-arrow-left"></i><span class="d-none d-sm-inline ms-1">Volver</span>
                         </a>
                         <button type="button" onclick="confirmarEliminacion(<?= $order['ot_id'] ?>)" class="btn btn-outline-primary px-4">
-                            <i class="ti ti-trash me-1"></i>Eliminar
+                            <i class="ti ti-trash"></i><span class="d-none d-sm-inline ms-1">Eliminar</span>
                         </button>
                         <button type="submit" class="btn btn-primary px-4">
-                            <i class="ti ti-device-floppy me-1"></i>Guardar Cambios
+                            <i class="ti ti-device-floppy"></i><span class="d-none d-sm-inline ms-1">Guardar</span>
                         </button>
                     </div>
                 </form>
@@ -145,23 +145,6 @@
 </div>
 
 <script>
-function convertToUppercase() {
-    const textarea = document.getElementById('ot_txt');
-    const text = textarea.value;
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    
-    // Separamos el texto por URLs para procesar solo lo que no es un link
-    const parts = text.split(urlRegex);
-    const result = parts.map(part => {
-        if (part.match(urlRegex)) {
-            return part; // Devolvemos el link tal cual
-        }
-        return part.toUpperCase(); // Convertimos el resto a mayúsculas
-    }).join('');
-    
-    textarea.value = result;
-}
-
 function confirmarEliminacion(id) {
     Swal.fire({
         title: '¿Deseas eliminar la orden?',
@@ -236,6 +219,19 @@ function autoResizeTextarea(el) {
     el.style.height = el.scrollHeight + 'px';
 }
 document.addEventListener('DOMContentLoaded', function() {
+    const orderForm = document.getElementById('orderForm');
+    if (orderForm) {
+        orderForm.addEventListener('submit', function(e) {
+            const textarea = document.getElementById('ot_txt');
+            if (textarea && textarea.value.trim() !== '') {
+                e.preventDefault();
+                navigator.clipboard.writeText(textarea.value).finally(() => {
+                    orderForm.submit();
+                });
+            }
+        });
+    }
+
     const tx = document.getElementById('ot_txt');
     if (tx) {
         tx.addEventListener('input', function() { autoResizeTextarea(this); });

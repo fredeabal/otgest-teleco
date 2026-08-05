@@ -29,7 +29,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form action="<?= site_url('orders/store') ?>" method="post" autocomplete="off">
+                <form action="<?= site_url('orders/store') ?>" method="post" autocomplete="off" id="orderForm">
                     <?= csrf_field() ?>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -104,13 +104,11 @@
                         </div>
 
                         <div class="col-12 mb-4">
-                            <div class="d-flex flex-wrap justify-content-between align-items-end mb-2 gap-2">
+                            <div class="d-flex justify-content-between align-items-end mb-2">
                                 <label for="ot_txt" class="form-label mb-0">Comentarios Técnicos</label>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="convertToUppercase()">
-                                        <i class="ti ti-letter-case-upper"></i> Mayúsculas
-                                    </button>
-                                </div>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="convertToUppercase()">
+                                    <i class="ti ti-letter-case-upper"></i> Mayúsculas
+                                </button>
                             </div>
                             <textarea class="form-control font-monospace text-warning bg-dark" id="ot_txt" name="ot_txt" rows="6"><?= old('ot_txt') ?></textarea>
                         </div>
@@ -126,11 +124,11 @@
                     </div>
 
                     <div class="d-flex justify-content-center mt-4 gap-2 border-top pt-4">
-                        <a href="<?= site_url('orders') ?>" class="btn btn-outline-primary px-4 me-2">
-                            <i class="ti ti-arrow-left me-1"></i>Cancelar
+                        <a href="<?= site_url('orders') ?>" class="btn btn-outline-primary px-4">
+                            <i class="ti ti-arrow-left"></i><span class="d-none d-sm-inline ms-1">Cancelar</span>
                         </a>
                         <button type="submit" class="btn btn-primary px-4">
-                            <i class="ti ti-device-floppy me-1"></i>Crear Orden
+                            <i class="ti ti-device-floppy"></i><span class="d-none d-sm-inline ms-1">Guardar</span>
                         </button>
                     </div>
                 </form>
@@ -180,6 +178,19 @@ function autoResizeTextarea(el) {
     el.style.height = el.scrollHeight + 'px';
 }
 document.addEventListener('DOMContentLoaded', function() {
+    const orderForm = document.getElementById('orderForm');
+    if (orderForm) {
+        orderForm.addEventListener('submit', function(e) {
+            const textarea = document.getElementById('ot_txt');
+            if (textarea && textarea.value.trim() !== '') {
+                e.preventDefault();
+                navigator.clipboard.writeText(textarea.value).finally(() => {
+                    orderForm.submit();
+                });
+            }
+        });
+    }
+
     const tx = document.getElementById('ot_txt');
     if (tx) {
         tx.addEventListener('input', function() { autoResizeTextarea(this); });
