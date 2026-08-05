@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.status === 'error') {
                         inputNumero.style.borderColor = 'var(--bs-primary)';
                         if (feedback) {
-                            feedback.innerHTML = `<a href="<?= site_url('orders/show/') ?>${data.order_id}" class="text-primary text-decoration-none" target="_blank">${data.message}</a>`;
+                            feedback.innerHTML = `<a href="<?= site_url('orders/show/') ?>${data.order_id}" class="text-primary text-decoration-none">${data.message}</a>`;
                             feedback.classList.remove('d-none');
                         }
                         if (submitBtn) submitBtn.disabled = true;
