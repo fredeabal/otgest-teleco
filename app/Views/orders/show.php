@@ -140,17 +140,17 @@
 <?php if (!empty($images)): ?>
 <div class="card mb-4">
     <div class="card-body">
-        <h5 class="card-title fw-semibold mb-4 border-bottom border-secondary-subtle pb-2">Evidencias Fotográficas</h5>
+        <h5 class="card-title fw-semibold mb-4 border-bottom pb-2">Evidencias Fotográficas</h5>
         
         <div class="row g-3">
             <?php foreach($images as $img): ?>
                 <div class="col-6 col-md-4 col-lg-3 position-relative">
-                    <a href="<?= base_url('ots/'.$img['img_nombre']) ?>" target="_blank" class="d-block overflow-hidden rounded border border-secondary-subtle" style="height: 150px;">
-                        <img src="<?= base_url('ots/'.$img['img_nombre']) ?>" alt="Evidencia" class="img-fluid w-100 h-100 object-fit-cover hover-zoom">
+                    <a href="<?= base_url('uploads/orders/'.$img['img_nombre']) ?>" target="_blank" class="d-block overflow-hidden rounded border" style="height: 150px;">
+                        <img src="<?= base_url('uploads/orders/'.$img['img_nombre']) ?>" alt="Evidencia" class="img-fluid w-100 h-100 object-fit-cover hover-zoom">
                     </a>
                     <?php if (auth()->user()->can('orders.view_all') || $order['ot_usr'] == auth()->user()->id): ?>
-                        <button onclick="eliminarImagen(<?= $img['img_id'] ?>, <?= $order['ot_id'] ?>)" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 p-1 rounded-circle shadow" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;" title="Eliminar">
-                            <i class="ti ti-x font-size-14"></i>
+                        <button onclick="eliminarImagen(<?= $img['img_id'] ?>, <?= $order['ot_id'] ?>)" class="btn btn-sm btn-danger position-absolute top-0 end-0 mt-2 me-3 p-0 rounded-circle shadow" style="width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;" title="Eliminar">
+                            <i class="ti ti-x" style="font-size: 12px;"></i>
                         </button>
                     <?php endif; ?>
                 </div>
@@ -244,7 +244,7 @@ function eliminarImagen(imgId, otId) {
         if (result.isConfirmed) {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = "<?= site_url('orders/delete_image') ?>/" + imgId + "/" + otId;
+            form.action = "<?= site_url('images/delete') ?>/" + imgId;
             
             const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';
