@@ -110,9 +110,14 @@
                         <div class="col-12 mb-4">
                             <div class="d-flex justify-content-between align-items-end mb-2">
                                 <label for="ot_txt" class="form-label mb-0">Comentarios Técnicos</label>
-                                <button type="button" class="btn btn-sm btn-primary" onclick="convertToUppercase()">
-                                    <i class="ti ti-letter-case-upper"></i> Mayúsculas
-                                </button>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="openScanner('ot_txt')">
+                                        <i class="ti ti-barcode"></i><span class="d-none d-sm-inline ms-1">Escanear</span>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="convertToUppercase()">
+                                        <i class="ti ti-letter-case-upper"></i><span class="d-none d-sm-inline ms-1">Mayúsculas</span>
+                                    </button>
+                                </div>
                             </div>
                             <textarea class="form-control" id="ot_txt" name="ot_txt" rows="6"><?= old('ot_txt', str_replace("<br />", "", $order['ot_txt'])) ?></textarea>
                         </div>

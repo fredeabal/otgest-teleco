@@ -194,6 +194,151 @@
     });
   </script>
   <script src="<?= base_url('assets/libs/sweetalert2/dist/sweetalert2.min.js') ?>"></script>
+
+  <!-- Modal genérico para escáner QR / Código de barras -->
+  <div class="modal fade" id="scannerModal" tabindex="-1" aria-labelledby="scannerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content overflow-hidden border-0 shadow-lg">
+        <div class="modal-header border-bottom border-dark">
+          <h5 class="modal-title" id="scannerModalLabel"><i class="ti ti-barcode text-primary"></i> Escanear Código</h5>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-primary" id="switchCameraBtn" title="Cambiar Cámara">
+                <i class="ti ti-camera-rotate"></i>
+            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeScannerBtn"></button>
+          </div>
+        </div>
+        <div class="modal-body p-0 bg-dark" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
+          <div id="qr-reader" style="width:100%; border:none; background: #000;">
+              <!-- El feed de la cámara aparecerá aquí -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script>
+    let html5QrCode = null;
+    let isScanning = false;
+    let currentFacingMode = "environment";
+    let qrSuccessCb = null;
+
+    function openScanner(targetElementId) {
+        const modalEl = document.getElementById('scannerModal');
+        const switchCamBtn = document.getElementById('switchCameraBtn');
+        // Reset loader UI
+        document.getElementById('qr-reader').innerHTML = '<div class="p-5 text-center text-muted"><div class="spinner-border text-primary mb-3" role="status"></div><p>Iniciando cámara...</p></div>';
+        
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+
+        const stopScanner = (andHide = false) => {
+            if (html5QrCode && isScanning) {
+                html5QrCode.stop().then(() => {
+                    isScanning = false;
+                    html5QrCode.clear();
+                    if(andHide) modal.hide();
+                }).catch(e => {
+                    console.error("Error deteniendo escáner:", e);
+                    if(andHide) modal.hide();
+                });
+            } else if (andHide) {
+                modal.hide();
+            }
+        };
+
+        qrSuccessCb = (decodedText, decodedResult) => {
+            const targetEl = document.getElementById(targetElementId);
+            if (targetEl) {
+                if (targetEl.value.trim() !== '') {
+                    targetEl.value += ' ' + decodedText;
+                } else {
+                    targetEl.value = decodedText;
+                }
+                if (typeof autoResizeTextarea === 'function') autoResizeTextarea(targetEl);
+            }
+            
+            // Beep
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+                oscillator.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } catch (e) {}
+
+            stopScanner(true);
+        };
+
+        const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+
+        const startCamera = (facingMode) => {
+            if (html5QrCode && isScanning) {
+                html5QrCode.stop().then(() => {
+                    isScanning = false;
+                    html5QrCode.clear();
+                    startActualScanner(facingMode);
+                }).catch(e => console.error(e));
+            } else {
+                startActualScanner(facingMode);
+            }
+        };
+
+        const startActualScanner = (facingMode) => {
+            if (!html5QrCode) html5QrCode = new Html5Qrcode("qr-reader");
+
+            html5QrCode.start({ facingMode: facingMode }, config, qrSuccessCb)
+            .then(() => {
+                isScanning = true;
+                currentFacingMode = facingMode;
+                // Auto-detectar la cámara física real que se está usando
+                const videoEl = document.querySelector('#qr-reader video');
+                if (videoEl && videoEl.srcObject) {
+                    const tracks = videoEl.srcObject.getVideoTracks();
+                    if (tracks.length > 0) {
+                        const settings = tracks[0].getSettings();
+                        const label = tracks[0].label.toLowerCase();
+                        
+                        // Determinar si es frontal leyendo los ajustes del hardware o el nombre
+                        const isFrontal = (settings.facingMode === 'user') || 
+                                          label.includes('front') || 
+                                          label.includes('frontal') || 
+                                          label.includes('user') || 
+                                          label.includes('webcam') || 
+                                          label.includes('facetime');
+                                          
+                        if (isFrontal) {
+                            videoEl.style.transform = "scaleX(-1)";
+                        } else {
+                            videoEl.style.transform = "none";
+                        }
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error("Error iniciando cámara:", err);
+                document.getElementById('qr-reader').innerHTML = `<div class="p-5 text-center text-danger"><i class="ti ti-alert-circle fs-1 mb-3 d-block"></i><p>No se pudo acceder a la cámara. Asegúrate de dar permisos.</p></div>`;
+            });
+        };
+        
+        switchCamBtn.onclick = () => {
+            const newMode = currentFacingMode === "environment" ? "user" : "environment";
+            startCamera(newMode);
+        };
+
+        setTimeout(() => {
+            currentFacingMode = "environment";
+            startCamera(currentFacingMode);
+        }, 300);
+        
+        modalEl.addEventListener('hidden.bs.modal', function () {
+            stopScanner(false);
+        }, { once: true });
+    }
+  </script>
 </body>
 
 </html>
