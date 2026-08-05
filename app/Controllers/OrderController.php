@@ -230,6 +230,12 @@ class OrderController extends BaseController
 
         $imputada = $this->request->getPost('ot_imputada') === 'on' ? 1 : 0;
 
+        $otFecha = $this->request->getPost('ot_fecha');
+        if ($otFecha) {
+            $d = \DateTime::createFromFormat('d/m/Y', $otFecha);
+            if ($d) $otFecha = $d->format('Y-m-d');
+        }
+
         $data = [
             'ot_numero'    => $this->request->getPost('ot_numero'),
             'ot_tipo'      => $this->request->getPost('ot_tipo'),
@@ -239,7 +245,7 @@ class OrderController extends BaseController
             'ot_txt'       => $this->request->getPost('ot_txt'),
             'ot_estado'    => $this->request->getPost('ot_estado'),
             'ot_imputada'  => $imputada,
-            'ot_fecha'     => $this->request->getPost('ot_fecha') ?: $order['ot_fecha'],
+            'ot_fecha'     => $otFecha ?: $order['ot_fecha'],
             'ot_editado_usr' => auth()->user()->id,
             'ot_editado_fecha' => date('Y-m-d'),
         ];

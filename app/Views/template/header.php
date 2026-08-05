@@ -54,8 +54,30 @@
   <link rel="stylesheet" href="<?= base_url('assets/') ?>libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 
   <style>
-    .flatpickr-calendar {
+    /* Estilos para el Bootstrap Datepicker */
+    .datepicker {
         z-index: 9999 !important;
+    }
+    /* Día de hoy: Borde primario (usando box-shadow para no perder el border-radius), fondo transparente */
+    .datepicker table tr td.day.today:not(.active) {
+        background-color: transparent !important;
+        box-shadow: inset 0 0 0 1px var(--bs-primary) !important;
+        border: none !important;
+        color: var(--bs-primary) !important;
+        border-radius: 6px !important;
+    }
+    .datepicker table tr td.day.today:not(.active):hover {
+        background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+    }
+    /* Día seleccionado (orden): Fondo primario sólido */
+    .datepicker table tr td.day.active,
+    .datepicker table tr td.day.active:hover {
+        background-color: var(--bs-primary) !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #fff !important;
+        border-radius: 6px !important;
+        text-shadow: none;
     }
   </style>
 

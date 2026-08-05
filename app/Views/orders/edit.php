@@ -97,11 +97,11 @@
                         
                         <div class="col-md-6 mb-3">
                             <label for="ot_fecha" class="form-label">Fecha de la Orden</label>
-                            <input type="text" class="form-control mydatepicker bg-dark text-white border-secondary" id="ot_fecha" name="ot_fecha" placeholder="Seleccione fecha..." value="<?= old('ot_fecha', isset($order['ot_fecha']) ? date('Y-m-d', strtotime($order['ot_fecha'])) : date('Y-m-d')) ?>">
+                            <input type="text" class="form-control mydatepicker bg-dark text-white border-secondary" id="ot_fecha" name="ot_fecha" placeholder="Seleccione fecha..." value="<?= old('ot_fecha', isset($order['ot_fecha']) ? date('d/m/Y', strtotime($order['ot_fecha'])) : date('d/m/Y')) ?>">
                         </div>
 
-                        <div class="col-12 mb-3">
-                            <label for="template_selector" class="form-label">Plantilla</label>
+                        <div class="col-md-6 mb-3">
+                            <label for="template_selector" class="form-label">Plantilla de Comentarios</label>
                             <select class="form-select" id="template_selector" onchange="insertTemplate()">
                                 <option value="">Seleccione una plantilla...</option>
                                 <?php if (!empty($templates)): ?>

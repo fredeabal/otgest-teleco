@@ -90,14 +90,8 @@
                                 <option value="4" <?= ($estado == 4) ? 'selected' : '' ?>>Anulada</option>
                             </select>
                         </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label for="ot_fecha" class="form-label">Fecha de la Orden</label>
-                            <input type="text" class="form-control mydatepicker bg-dark text-white border-secondary" id="ot_fecha" name="ot_fecha" placeholder="Seleccione fecha..." value="<?= old('ot_fecha', date('Y-m-d')) ?>">
-                        </div>
-
                         <div class="col-12 mb-3">
-                            <label for="template_selector" class="form-label">Plantilla</label>
+                            <label for="template_selector" class="form-label">Plantilla de Comentarios</label>
                             <select class="form-select" id="template_selector" onchange="insertTemplate()">
                                 <option value="">Seleccione una plantilla...</option>
                                 <?php if (!empty($templates)): ?>

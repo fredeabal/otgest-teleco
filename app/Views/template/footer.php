@@ -21,7 +21,7 @@
         // Bootstrap Datepicker (Modernize template)
         if ($.fn.datepicker) {
             $('.mydatepicker').datepicker({
-                format: 'yyyy-mm-dd',
+                format: 'dd/mm/yyyy',
                 autoclose: true,
                 todayHighlight: true,
                 language: 'es'

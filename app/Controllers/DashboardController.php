@@ -13,6 +13,18 @@ class DashboardController extends BaseController
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
         
+        $dbStartDate = $startDate;
+        $dbEndDate = $endDate;
+        
+        if ($startDate) {
+            $d = \DateTime::createFromFormat('d/m/Y', $startDate);
+            if ($d) $dbStartDate = $d->format('Y-m-d');
+        }
+        if ($endDate) {
+            $d = \DateTime::createFromFormat('d/m/Y', $endDate);
+            if ($d) $dbEndDate = $d->format('Y-m-d');
+        }
+        
         $canViewAll = $user->can('orders.view_all') || $user->inGroup('superadmin', 'admin');
         
         // --- 1. Get metrics counts ---
@@ -31,9 +43,9 @@ class DashboardController extends BaseController
             $builder->where("strftime('%Y', ot_fecha)", date('Y'));
         } elseif ($filter === '12months') {
             $builder->where('ot_fecha >=', date('Y-m-d', strtotime('-12 months')));
-        } elseif ($filter === 'custom' && $startDate && $endDate) {
-            $builder->where('ot_fecha >=', $startDate);
-            $builder->where('ot_fecha <=', $endDate);
+        } elseif ($filter === 'custom' && $dbStartDate && $dbEndDate) {
+            $builder->where('ot_fecha >=', $dbStartDate);
+            $builder->where('ot_fecha <=', $dbEndDate);
         }
         
         $builder->select('ot_tipo, COUNT(*) as total');
@@ -73,12 +85,12 @@ class DashboardController extends BaseController
             $chartBuilder->where("strftime('%Y-%m', ot_fecha)", date('Y-m'));
             $chartBuilder->select("strftime('%Y-%m-%d', ot_fecha) as label, COUNT(*) as total");
             $groupBy = 'day';
-        } elseif ($filter === 'custom' && $startDate && $endDate) {
-            $chartBuilder->where('ot_fecha >=', $startDate);
-            $chartBuilder->where('ot_fecha <=', $endDate);
+        } elseif ($filter === 'custom' && $dbStartDate && $dbEndDate) {
+            $chartBuilder->where('ot_fecha >=', $dbStartDate);
+            $chartBuilder->where('ot_fecha <=', $dbEndDate);
             // Si el rango es mayor a 60 días, quizás agrupar por mes, pero por defecto día
-            $date1 = new \DateTime($startDate);
-            $date2 = new \DateTime($endDate);
+            $date1 = new \DateTime($dbStartDate);
+            $date2 = new \DateTime($dbEndDate);
             if ($date1->diff($date2)->days > 90) {
                 $chartBuilder->select("strftime('%Y-%m', ot_fecha) as label, COUNT(*) as total");
                 $groupBy = 'month';
