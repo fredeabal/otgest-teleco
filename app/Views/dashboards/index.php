@@ -27,8 +27,8 @@
               <option value="custom" <?= ($currentFilter ?? '') === 'custom' ? 'selected' : '' ?>>Personalizado</option>
             </select>
             
-            <input type="text" name="start_date" id="start_date" class="form-control datepicker-noboots custom-date-input" placeholder="Inicio" value="<?= esc($startDate ?? '') ?>" style="display: <?= ($currentFilter ?? '') === 'custom' ? 'block' : 'none' ?> !important; max-width: 120px;">
-            <input type="text" name="end_date" id="end_date" class="form-control datepicker-noboots custom-date-input" placeholder="Fin" value="<?= esc($endDate ?? '') ?>" style="display: <?= ($currentFilter ?? '') === 'custom' ? 'block' : 'none' ?> !important; max-width: 120px;">
+            <input type="text" name="start_date" id="start_date" class="form-control mydatepicker custom-date-input" placeholder="Inicio" value="<?= esc($startDate ?? '') ?>" style="display: <?= ($currentFilter ?? '') === 'custom' ? 'block' : 'none' ?> !important; max-width: 120px;">
+            <input type="text" name="end_date" id="end_date" class="form-control mydatepicker custom-date-input" placeholder="Fin" value="<?= esc($endDate ?? '') ?>" style="display: <?= ($currentFilter ?? '') === 'custom' ? 'block' : 'none' ?> !important; max-width: 120px;">
             
             <button type="submit" class="btn btn-primary"><i class="ti ti-filter"></i></button>
           </div>
@@ -49,15 +49,6 @@ function toggleCustomDates(val) {
         }
     });
 }
-document.addEventListener("DOMContentLoaded", function() {
-    if (typeof flatpickr !== 'undefined') {
-        flatpickr('.datepicker-noboots', {
-            dateFormat: "Y-m-d",
-            locale: "es",
-            position: "bottom"
-        });
-    }
-});
 </script>
 
 <!-- =====================================================================

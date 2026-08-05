@@ -12,23 +12,20 @@
   <script src="<?= base_url('assets/') ?>js/theme/theme.js"></script>
   <script src="<?= base_url('assets/') ?>js/theme/app.min.js"></script>
   <script src="<?= base_url('assets/') ?>js/theme/sidebarmenu.js"></script>
-  <!-- Flatpickr JS (Premium Datetime) -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+  <!-- Bootstrap Datepicker JS -->
+  <script src="<?= base_url('assets/') ?>libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+  <script src="<?= base_url('assets/') ?>libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
   
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-        if (typeof flatpickr !== 'undefined') {
-            flatpickr('.datepicker', {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                locale: "es",
-                minDate: "today",
-                wrap: true, // Permite que el ícono clickeable abra el calendario si es parte del wrapper
-                position: "top" // Siempre se despliega hacia arriba
+        // Bootstrap Datepicker (Modernize template)
+        if ($.fn.datepicker) {
+            $('.mydatepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+                language: 'es'
             });
-            console.log("Flatpickr inicializado hacia arriba y en español");
         }
 
         // Auto-resize para textareas
@@ -44,7 +41,7 @@
   </script>
 
   <!-- solar icons -->
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  <script src="<?= base_url('assets/') ?>libs/iconify/iconify-icon.min.js"></script>
 
   <!-- highlight.js (code view) -->
   <script src="<?= base_url('assets/') ?>js/highlights/highlight.min.js"></script>
@@ -217,7 +214,7 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="<?= base_url('assets/') ?>libs/html5-qrcode/html5-qrcode.min.js"></script>
   <script>
     let html5QrCode = null;
     let isScanning = false;

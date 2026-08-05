@@ -50,9 +50,8 @@
   <link rel="stylesheet" href="<?= base_url('assets/') ?>css/custom.css?v=<?= filemtime(FCPATH . 'assets/css/custom.css') ?>" />
   <link rel="stylesheet" href="<?= base_url('assets/libs/sweetalert2/dist/sweetalert2.min.css') ?>" />
   
-  <!-- Flatpickr (Premium Datetime Picker) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+  <!-- Bootstrap Datepicker -->
+  <link rel="stylesheet" href="<?= base_url('assets/') ?>libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 
   <style>
     .flatpickr-calendar {
