@@ -133,8 +133,7 @@
                   <?php if($pendingImputations > 0): ?>
                   <li class="nav-item">
                     <a class="nav-link nav-icon-hover" href="<?= base_url('orders') ?>" title="Tienes <?= $pendingImputations ?> órdenes sin imputar" data-bs-toggle="tooltip">
-                      <i class="ti ti-bell-ringing text-danger"></i>
-                      <div class="notification bg-danger rounded-circle"></div>
+                      <i class="ti ti-bell-ringing text-danger fs-6"></i>
                     </a>
                   </li>
                   <?php endif; ?>
