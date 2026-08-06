@@ -48,6 +48,47 @@ class OrderController extends BaseController
                   ->orWhere("REPLACE(ot_txt, ' ', '') LIKE $likeStr", null, false)
                   ->groupEnd();
         }
+        
+        $estado = $this->request->getGet('estado');
+        $tipo = $this->request->getGet('tipo');
+        $operadora = $this->request->getGet('operadora');
+        $imputada = $this->request->getGet('imputada');
+        $fecha_desde = $this->request->getGet('fecha_desde');
+        $fecha_hasta = $this->request->getGet('fecha_hasta');
+
+        if (!empty($estado)) {
+            $query->where('ot_estado', $estado);
+        }
+        
+        if ($imputada !== null && $imputada !== '') {
+            $query->where('ot_imputada', $imputada);
+        }
+        
+        if (!empty($tipo)) {
+            $query->where('ot_tipo', $tipo);
+        }
+        
+        if (!empty($operadora)) {
+            $query->where('ot_operadora', $operadora);
+        }
+        
+        if (!empty($fecha_desde)) {
+            $f_desde = \DateTime::createFromFormat('d/m/Y', $fecha_desde);
+            if ($f_desde) {
+                $query->where('ot_fecha >=', $f_desde->format('Y-m-d'));
+            } else {
+                $query->where('ot_fecha >=', $fecha_desde); // Fallback if already Y-m-d
+            }
+        }
+        
+        if (!empty($fecha_hasta)) {
+            $f_hasta = \DateTime::createFromFormat('d/m/Y', $fecha_hasta);
+            if ($f_hasta) {
+                $query->where('ot_fecha <=', $f_hasta->format('Y-m-d'));
+            } else {
+                $query->where('ot_fecha <=', $fecha_hasta);
+            }
+        }
 
         // Si el usuario no tiene permisos para ver todas (ej. no es admin), solo ve las suyas
         if (!auth()->user()->can('orders.view_all')) {
@@ -57,6 +98,12 @@ class OrderController extends BaseController
         $data['orders'] = $query->paginate(50);
         $data['pager']  = $this->orderModel->pager;
         $data['search'] = $search;
+        $data['estado'] = $estado;
+        $data['tipo']   = $tipo;
+        $data['operadora'] = $operadora;
+        $data['imputada'] = $imputada;
+        $data['fecha_desde'] = $fecha_desde;
+        $data['fecha_hasta'] = $fecha_hasta;
 
         echo view('template/header', ['title' => 'Órdenes de Trabajo']);
         echo view('orders/index', $data);
@@ -103,7 +150,7 @@ class OrderController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $imputada = $this->request->getPost('ot_imputada') === 'on' ? 1 : 0;
+        $imputada = $this->request->getPost('ot_imputada') == 1 ? 1 : 0;
 
         $data = [
             'ot_numero'    => $this->request->getPost('ot_numero'),
@@ -228,7 +275,7 @@ class OrderController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $imputada = $this->request->getPost('ot_imputada') === 'on' ? 1 : 0;
+        $imputada = $this->request->getPost('ot_imputada') == 1 ? 1 : 0;
 
         $otFecha = $this->request->getPost('ot_fecha');
         if ($otFecha) {

@@ -34,7 +34,7 @@
                             <tr>
                                 <th class="text-start">Rol</th>
                                 <th class="text-start d-none d-md-table-cell">Descripción</th>
-                                <th class="text-end">Acciones</th>
+                                <th class="text-end"></th>
                             </tr>
                         </thead>
                         <tbody>

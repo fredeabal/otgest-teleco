@@ -231,9 +231,9 @@ class DashboardController extends BaseController
             
             // Estado y texto
             $estado = match($row['ot_estado']) {
-                '1' => 'Pendiente',
-                '2' => 'En Curso',
-                '3' => 'Finalizado',
+                '1' => 'Finalizado',
+                '2' => 'Escalado',
+                '3' => 'Incidencia',
                 '4' => 'Anulado',
                 default => 'Desconocido'
             };

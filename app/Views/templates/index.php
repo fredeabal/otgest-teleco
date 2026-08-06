@@ -55,7 +55,7 @@
                         <thead>
                             <tr>
                                 <th class="text-start">Nombre</th>
-                                <th class="text-end">Acciones</th>
+                                <th class="text-end"></th>
                             </tr>
                         </thead>
                         <tbody>

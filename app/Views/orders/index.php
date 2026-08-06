@@ -36,11 +36,75 @@
                     <form method="GET" action="<?= site_url('orders') ?>" class="d-flex align-items-center gap-2 w-100 w-md-auto search-form-responsive ms-auto" autocomplete="off">
                         <div class="position-relative w-100 search-box-container">
                             <input type="text" name="search" id="search-orders" class="form-control" placeholder="Buscar orden..." value="<?= isset($search) ? esc($search) : '' ?>">
+                            <button type="button" class="btn position-absolute text-muted end-0 top-50 translate-middle-y border-0" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false" aria-controls="advancedFilters" title="Filtros avanzados">
+                                <i class="ti ti-adjustments-horizontal"></i>
+                            </button>
                             <button type="submit" class="position-absolute top-50 translate-middle-y bg-transparent border-0 text-muted" style="left: 0.75rem; padding:0; z-index: 10;">
                                 <i class="ti ti-search search-icon text-muted" style="position:static; transform:none;"></i>
                             </button>
                         </div>
                     </form>
+                </div>
+                
+                <!-- Collapse Filtros Avanzados -->
+                <div class="collapse mb-4" id="advancedFilters">
+                    <div class="card card-body bg-transparent border-0 shadow-none mb-0 p-0">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fs-2 fw-semibold">Operadora</label>
+                                <select class="form-select filter-select" id="filter-operadora" name="operadora">
+                                    <option value="">Todas las operadoras</option>
+                                    <?php 
+                                        $operadoras = ['DIGI', 'FINETWORK', 'JAZZTEL', 'LOWI', 'MASMOVIL', 'MOVISTAR', 'O2', 'ORANGE', 'PEPEPHONE', 'R-CABLE', 'VIRGIN', 'VODAFONE', 'YOIGO'];
+                                        foreach($operadoras as $op): 
+                                    ?>
+                                        <option value="<?= $op ?>" <?= (isset($operadora) && $operadora == $op) ? 'selected' : '' ?>><?= $op ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fs-2 fw-semibold">Estado</label>
+                                <select class="form-select filter-select" id="filter-estado" name="estado">
+                                    <option value="">Todos los estados</option>
+                                    <option value="1" <?= (isset($estado) && $estado == '1') ? 'selected' : '' ?>>Finalizado</option>
+                                    <option value="2" <?= (isset($estado) && $estado == '2') ? 'selected' : '' ?>>Escalado</option>
+                                    <option value="3" <?= (isset($estado) && $estado == '3') ? 'selected' : '' ?>>Incidencia</option>
+                                    <option value="4" <?= (isset($estado) && $estado == '4') ? 'selected' : '' ?>>Anulado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fs-2 fw-semibold">Imputación</label>
+                                <select class="form-select filter-select" id="filter-imputada" name="imputada">
+                                    <option value="">Todas</option>
+                                    <option value="1" <?= (isset($imputada) && $imputada == '1') ? 'selected' : '' ?>>Imputadas</option>
+                                    <option value="0" <?= (isset($imputada) && $imputada == '0') ? 'selected' : '' ?>>Sin imputar</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fs-2 fw-semibold">Tipo</label>
+                                <select class="form-select filter-select" id="filter-tipo" name="tipo">
+                                    <option value="">Todos los tipos</option>
+                                    <option value="INSTALACION" <?= (isset($tipo) && $tipo == 'INSTALACION') ? 'selected' : '' ?>>Instalación</option>
+                                    <option value="AVERIA" <?= (isset($tipo) && $tipo == 'AVERIA') ? 'selected' : '' ?>>Avería</option>
+                                    <option value="MODIFICACION" <?= (isset($tipo) && $tipo == 'MODIFICACION') ? 'selected' : '' ?>>Modificación</option>
+                                    <option value="TRASLADO" <?= (isset($tipo) && $tipo == 'TRASLADO') ? 'selected' : '' ?>>Traslado</option>
+                                    <option value="PORTABILIDAD" <?= (isset($tipo) && $tipo == 'PORTABILIDAD') ? 'selected' : '' ?>>Portabilidad</option>
+                                    <option value="BAJA" <?= (isset($tipo) && $tipo == 'BAJA') ? 'selected' : '' ?>>Baja</option>
+                                    <option value="AUDITORIA" <?= (isset($tipo) && $tipo == 'AUDITORIA') ? 'selected' : '' ?>>Auditoría</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-1">
+                            <div class="col-md-6">
+                                <label class="form-label fs-2 fw-semibold">Fecha Desde</label>
+                                <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-desde" name="fecha_desde" placeholder="DD/MM/YYYY" value="<?= isset($fecha_desde) ? esc($fecha_desde) : '' ?>" autocomplete="off">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fs-2 fw-semibold">Fecha Hasta</label>
+                                <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-hasta" name="fecha_hasta" placeholder="DD/MM/YYYY" value="<?= isset($fecha_hasta) ? esc($fecha_hasta) : '' ?>" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="orders-list-container">
@@ -59,7 +123,7 @@
                                 <th class="text-center d-none d-md-table-cell">Tipo</th>
                                 <th class="text-start d-none d-md-table-cell">Cliente</th>
                                 <th class="text-center d-none d-md-table-cell">Estado</th>
-                                <th class="text-end">Acciones</th>
+                                <th class="text-end"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -134,29 +198,72 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-orders');
+    const filterSelects = document.querySelectorAll('.filter-select, .filter-input');
     const form = searchInput.closest('form');
     const container = document.getElementById('orders-list-container');
     let debounceTimer;
+    
+    // Initialize separate Bootstrap Datepickers
+    if ($.fn.datepicker) {
+        $('.filter-datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'es',
+            autoclose: true,
+            todayHighlight: true
+        }).on('changeDate', function() {
+            performSearch();
+        });
+    }
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        performSearch(searchInput.value);
+        performSearch();
     });
 
     searchInput.addEventListener('input', function() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
-            performSearch(this.value);
+            performSearch();
         }, 400); // 400ms delay for AJAX request
     });
+    
+    filterSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            performSearch();
+        });
+    });
 
-    function performSearch(query) {
+    function performSearch() {
+        const query = searchInput.value;
+        const operadora = document.getElementById('filter-operadora').value;
+        const estado = document.getElementById('filter-estado').value;
+        const tipo = document.getElementById('filter-tipo').value;
+        const imputada = document.getElementById('filter-imputada').value;
+        const fechaDesde = document.getElementById('filter-fecha-desde').value;
+        const fechaHasta = document.getElementById('filter-fecha-hasta').value;
+        
         const url = new URL(form.action);
-        if (query.trim() !== '') {
-            url.searchParams.set('search', query);
-        } else {
-            url.searchParams.delete('search');
-        }
+        
+        if (query.trim() !== '') url.searchParams.set('search', query);
+        else url.searchParams.delete('search');
+        
+        if (operadora !== '') url.searchParams.set('operadora', operadora);
+        else url.searchParams.delete('operadora');
+        
+        if (estado !== '') url.searchParams.set('estado', estado);
+        else url.searchParams.delete('estado');
+        
+        if (tipo !== '') url.searchParams.set('tipo', tipo);
+        else url.searchParams.delete('tipo');
+        
+        if (imputada !== '') url.searchParams.set('imputada', imputada);
+        else url.searchParams.delete('imputada');
+        
+        if (fechaDesde !== '') url.searchParams.set('fecha_desde', fechaDesde);
+        else url.searchParams.delete('fecha_desde');
+        
+        if (fechaHasta !== '') url.searchParams.set('fecha_hasta', fechaHasta);
+        else url.searchParams.delete('fecha_hasta');
 
         container.style.opacity = '0.5';
         container.style.pointerEvents = 'none';

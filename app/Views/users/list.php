@@ -55,7 +55,7 @@
                                 <th class="text-center d-none d-md-table-cell">Rol</th>
                                 <th class="text-center d-none d-lg-table-cell">Último Acceso</th>
                                 <th class="text-center d-none d-md-table-cell">Estado</th>
-                                <th class="text-end">Acciones</th>
+                                <th class="text-end"></th>
                             </tr>
                         </thead>
                         <tbody>
