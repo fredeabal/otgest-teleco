@@ -17,19 +17,20 @@
             <li class="breadcrumb-item" aria-current="page">Editar</li>
           </ol>
         </nav>
-      </div>
       <div class="col-3 d-flex justify-content-end align-items-center">
-        <?php if($order['ot_estado'] == 1): ?>
-            <span class="text-success fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-check"></i> <span class="d-none d-sm-inline text-uppercase">Finalizada</span></span>
-        <?php elseif($order['ot_estado'] == 2): ?>
-            <span class="text-danger fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-alert-circle"></i> <span class="d-none d-sm-inline text-uppercase">Escalada</span></span>
-        <?php elseif($order['ot_estado'] == 3): ?>
-            <span class="text-danger fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-alert-triangle"></i> <span class="d-none d-sm-inline text-uppercase">Incidencia</span></span>
-        <?php elseif($order['ot_estado'] == 4): ?>
-            <span class="text-danger fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-ban"></i> <span class="d-none d-sm-inline text-uppercase">Anulada</span></span>
-        <?php else: ?>
-            <span class="text-warning fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-clock"></i> <span class="d-none d-sm-inline text-uppercase">Pendiente</span></span>
-        <?php endif; ?>
+        <div style="font-size: 0.75rem; letter-spacing: 0.5px;">
+            <?php if($order['ot_estado'] == 1): ?>
+                <span class="text-success fw-normal d-flex align-items-center gap-1"><i class="ti ti-check"></i> <span class="d-none d-sm-inline text-uppercase">Finalizada</span></span>
+            <?php elseif($order['ot_estado'] == 2): ?>
+                <span class="text-danger fw-normal d-flex align-items-center gap-1"><i class="ti ti-alert-circle"></i> <span class="d-none d-sm-inline text-uppercase">Escalada</span></span>
+            <?php elseif($order['ot_estado'] == 3): ?>
+                <span class="text-danger fw-normal d-flex align-items-center gap-1"><i class="ti ti-alert-triangle"></i> <span class="d-none d-sm-inline text-uppercase">Incidencia</span></span>
+            <?php elseif($order['ot_estado'] == 4): ?>
+                <span class="text-danger fw-normal d-flex align-items-center gap-1"><i class="ti ti-ban"></i> <span class="d-none d-sm-inline text-uppercase">Anulada</span></span>
+            <?php else: ?>
+                <span class="text-warning fw-normal d-flex align-items-center gap-1"><i class="ti ti-clock"></i> <span class="d-none d-sm-inline text-uppercase">Pendiente</span></span>
+            <?php endif; ?>
+        </div>
       </div>
     </div>
   </div>
