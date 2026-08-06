@@ -638,3 +638,31 @@
     position: relative;
     z-index: 1;
 }
+
+/* =============================================
+   Estilos de Órdenes y Evidencias
+   ============================================= */
+.operator-logo-show { height: 35px; object-fit: contain; }
+@media (min-width: 768px) { .operator-logo-show { height: 50px; } }
+
+.ot-status-header { font-size: 0.75rem; letter-spacing: 0.5px; }
+.opacity-80 { opacity: 0.8 !important; }
+.object-fit-cover { object-fit: cover; }
+.hover-zoom { transition: transform 0.3s ease; }
+.hover-zoom:hover { transform: scale(1.05); }
+.border-dashed { border-style: dashed !important; border-width: 2px !important; border-color: rgba(var(--bs-primary-rgb), 0.3) !important; }
+
+.dropzone-custom {
+    background: transparent;
+    border: 2px dashed rgba(var(--bs-primary-rgb), 0.3);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px;
+}
+.dropzone-custom .dz-message { margin: 2em 0; }
+
+.feedback-sm { font-size: 0.875em; }
+.h-150px { height: 150px; }
+.delete-img-btn { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+.delete-img-icon { font-size: 12px; }
+

@@ -36,10 +36,6 @@
   </div>
 </div>
 
-<style>
-.operator-logo-show { height: 35px; object-fit: contain; }
-@media (min-width: 768px) { .operator-logo-show { height: 50px; } }
-</style>
 
 <div class="row">
     <!-- Detalles Principales (Formulario Desactivado) -->
@@ -64,7 +60,7 @@
                         <span>OT <?= htmlspecialchars($order['ot_numero']) ?></span>
                     </div>
 
-                    <div style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                    <div class="ot-status-header">
                         <?php if($order['ot_estado'] == 1): ?>
                             <span class="text-success fw-normal d-flex align-items-center gap-1"><i class="ti ti-check"></i> <span class="d-none d-sm-inline text-uppercase">Finalizada</span></span>
                         <?php elseif($order['ot_estado'] == 2): ?>
@@ -146,7 +142,7 @@
                     <div class="col-12 mb-4">
                         <div class="form-check form-switch px-4 py-3">
                             <input class="form-check-input switch-custom-size" type="checkbox" role="switch" id="ot_imputada" disabled <?= ($order['ot_imputada'] == 1) ? 'checked' : '' ?>>
-                            <label class="form-check-label ms-2 pt-0 fw-semibold" for="ot_imputada" style="opacity: 0.8;">
+                            <label class="form-check-label ms-2 pt-0 fw-semibold opacity-80" for="ot_imputada">
                                 Orden Imputada en Almacén
                             </label>
                         </div>
@@ -185,12 +181,12 @@
         <div class="row g-3">
             <?php foreach($images as $img): ?>
                 <div class="col-6 col-md-4 col-lg-3 position-relative">
-                    <a href="<?= base_url('uploads/orders/'.$img['img_nombre']) ?>" target="_blank" class="d-block overflow-hidden rounded border" style="height: 150px;">
+                    <a href="<?= base_url('uploads/orders/'.$img['img_nombre']) ?>" target="_blank" class="d-block overflow-hidden rounded border h-150px">
                         <img src="<?= base_url('uploads/orders/'.$img['img_nombre']) ?>" alt="Evidencia" class="img-fluid w-100 h-100 object-fit-cover hover-zoom">
                     </a>
                     <?php if (auth()->user()->can('orders.view_all') || $order['ot_usr'] == auth()->user()->id): ?>
-                        <button onclick="eliminarImagen(<?= $img['img_id'] ?>, <?= $order['ot_id'] ?>)" class="btn btn-sm btn-danger position-absolute top-0 end-0 mt-2 me-3 p-0 rounded-circle shadow" style="width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;" title="Eliminar">
-                            <i class="ti ti-x" style="font-size: 12px;"></i>
+                        <button onclick="eliminarImagen(<?= $img['img_id'] ?>, <?= $order['ot_id'] ?>)" class="btn btn-sm btn-danger position-absolute top-0 end-0 mt-2 me-3 p-0 rounded-circle shadow delete-img-btn" title="Eliminar">
+                            <i class="ti ti-x delete-img-icon"></i>
                         </button>
                     <?php endif; ?>
                 </div>
@@ -215,7 +211,7 @@
         <div class="modal-body">
             <div class="mb-3">
                 <label for="recipient_email" class="form-label">Correo electrónico del destinatario</label>
-                <input type="email" class="form-control" id="recipient_email" name="recipient_email" required placeholder="ejemplo@dominio.com">
+                <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="ejemplo@dominio.com">
             </div>
             <p class="text-muted small mb-0">Se enviará un correo con los detalles de la orden Nº <?= htmlspecialchars($order['ot_numero']) ?>.</p>
         </div>
@@ -236,7 +232,7 @@
                 <h5 class="modal-title" id="uploadImagesModalLabel">Adjuntar Imágenes</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?= site_url('images/store') ?>" method="post" enctype="multipart/form-data" class="dropzone" id="imagesDropzone" autocomplete="off">
+            <form action="<?= site_url('images/store') ?>" method="post" enctype="multipart/form-data" class="dropzone dropzone-custom" id="imagesDropzone" autocomplete="off">
                 <?= csrf_field() ?>
                 <input type="hidden" name="ot_id" value="<?= $order['ot_id'] ?>">
                 <div class="dz-message needsclick text-center p-4">
@@ -256,12 +252,6 @@
     </div>
 </div>
 
-<style>
-.object-fit-cover { object-fit: cover; }
-.hover-zoom { transition: transform 0.3s ease; }
-.hover-zoom:hover { transform: scale(1.05); }
-.border-dashed { border-style: dashed !important; border-width: 2px !important; border-color: rgba(var(--bs-primary-rgb), 0.3) !important; }
-</style>
 
 <script>
 function eliminarImagen(imgId, otId) {
@@ -303,18 +293,6 @@ function eliminarImagen(imgId, otId) {
 <link rel="stylesheet" href="<?= base_url('assets/libs/dropzone/dist/min/dropzone.min.css') ?>">
 <script src="<?= base_url('assets/libs/dropzone/dist/min/dropzone.min.js') ?>"></script>
 
-<style>
-.dropzone {
-    background: transparent;
-    border: 2px dashed rgba(var(--bs-primary-rgb), 0.3);
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px;
-}
-.dropzone .dz-message {
-    margin: 2em 0;
-}
-</style>
 
 <script>
 Dropzone.autoDiscover = false;

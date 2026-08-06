@@ -48,7 +48,7 @@
                         <div class="col-md-4 mb-3">
                             <label for="ot_numero" class="form-label">Número de Orden</label>
                             <input type="text" class="form-control" id="ot_numero" name="ot_numero" value="<?= old('ot_numero') ?>">
-                            <div id="ot_numero_feedback" class="text-primary mt-1 d-none" style="font-size: 0.875em;"></div>
+                            <div id="ot_numero_feedback" class="text-primary mt-1 d-none feedback-sm"></div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="ot_tipo" class="form-label">Tipo de Trabajo</label>
