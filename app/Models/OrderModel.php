@@ -17,6 +17,7 @@ class OrderModel extends Model
         'ot_tipo',
         'ot_operadora',
         'ot_cliente',
+        'ot_contacto',
         'ot_direccion',
         'ot_txt',
         'ot_usr',

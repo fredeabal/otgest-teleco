@@ -142,6 +142,7 @@ class OrderController extends BaseController
             'ot_operadora' => 'required',
             'ot_cliente'   => 'required|min_length[5]',
             'ot_direccion' => 'required',
+            'ot_contacto'  => 'permit_empty|numeric',
             'ot_txt'       => 'required',
             'ot_estado'    => 'required',
         ];
@@ -157,6 +158,7 @@ class OrderController extends BaseController
             'ot_tipo'      => $this->request->getPost('ot_tipo'),
             'ot_operadora' => $this->request->getPost('ot_operadora'),
             'ot_cliente'   => $this->request->getPost('ot_cliente'),
+            'ot_contacto'  => $this->request->getPost('ot_contacto'),
             'ot_direccion' => $this->request->getPost('ot_direccion'),
             'ot_txt'       => $this->request->getPost('ot_txt'),
             'ot_estado'    => $this->request->getPost('ot_estado'),
@@ -267,6 +269,7 @@ class OrderController extends BaseController
             'ot_tipo'      => 'required',
             'ot_cliente'   => 'required|min_length[5]',
             'ot_direccion' => 'required',
+            'ot_contacto'  => 'permit_empty|numeric',
             'ot_txt'       => 'required',
             'ot_estado'    => 'required',
         ];
@@ -288,6 +291,7 @@ class OrderController extends BaseController
             'ot_tipo'      => $this->request->getPost('ot_tipo'),
             'ot_operadora' => $this->request->getPost('ot_operadora'),
             'ot_cliente'   => $this->request->getPost('ot_cliente'),
+            'ot_contacto'  => $this->request->getPost('ot_contacto'),
             'ot_direccion' => $this->request->getPost('ot_direccion'),
             'ot_txt'       => $this->request->getPost('ot_txt'),
             'ot_estado'    => $this->request->getPost('ot_estado'),

@@ -80,11 +80,22 @@
                 </h4>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label class="form-label text-muted font-size-13">Cliente</label>
                         <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_cliente']) ?>">
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted font-size-13">Teléfono</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_contacto'] ?? 'N/D') ?>">
+                            <?php if(!empty($order['ot_contacto'])): ?>
+                            <a href="tel:<?= htmlspecialchars($order['ot_contacto']) ?>" class="btn bg-primary-subtle text-primary d-flex align-items-center justify-content-center" title="Llamar">
+                                <i class="ti ti-phone"></i>
+                            </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
                         <label class="form-label text-muted font-size-13">Dirección</label>
                         <div class="input-group">
                             <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_direccion']) ?>">

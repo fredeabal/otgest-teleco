@@ -47,7 +47,7 @@
                 <form action="<?= site_url('orders/update/' . $order['ot_id']) ?>" method="post" autocomplete="off" id="orderForm">
                     <?= csrf_field() ?>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="ot_operadora" class="form-label">Operadora</label>
                             <select class="form-select" id="ot_operadora" name="ot_operadora">
                                 <option value="">Seleccione...</option>
@@ -60,20 +60,12 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="ot_numero" class="form-label">Número de Orden</label>
                             <input type="text" class="form-control" id="ot_numero" name="ot_numero" value="<?= old('ot_numero', $order['ot_numero']) ?>">
                             <div id="ot_numero_feedback" class="text-primary mt-1 d-none" style="font-size: 0.875em;"></div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ot_cliente" class="form-label">Cliente</label>
-                            <input type="text" class="form-control" id="ot_cliente" name="ot_cliente" value="<?= old('ot_cliente', $order['ot_cliente']) ?>">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ot_direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="ot_direccion" name="ot_direccion" value="<?= old('ot_direccion', $order['ot_direccion']) ?>">
-                        </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="ot_tipo" class="form-label">Tipo de Trabajo</label>
                             <select class="form-select" id="ot_tipo" name="ot_tipo">
                                 <?php 
@@ -93,8 +85,21 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="ot_cliente" class="form-label">Cliente</label>
+                            <input type="text" class="form-control" id="ot_cliente" name="ot_cliente" value="<?= old('ot_cliente', $order['ot_cliente']) ?>">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="ot_direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="ot_direccion" name="ot_direccion" value="<?= old('ot_direccion', $order['ot_direccion']) ?>">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="ot_contacto" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="ot_contacto" name="ot_contacto" value="<?= old('ot_contacto', $order['ot_contacto'] ?? '') ?>">
+                        </div>
                         
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="ot_estado" class="form-label">Estado de la Orden</label>
                             <?php $estado = old('ot_estado', $order['ot_estado']); ?>
                             <select class="form-select" id="ot_estado" name="ot_estado">
@@ -104,13 +109,11 @@
                                 <option value="4" <?= ($estado == 4) ? 'selected' : '' ?>>Anulada</option>
                             </select>
                         </div>
-                        
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="ot_fecha" class="form-label">Fecha de la Orden</label>
                             <input type="text" class="form-control mydatepicker bg-dark text-white border-secondary" id="ot_fecha" name="ot_fecha" placeholder="Seleccione fecha..." value="<?= old('ot_fecha', isset($order['ot_fecha']) ? date('d/m/Y', strtotime($order['ot_fecha'])) : date('d/m/Y')) ?>">
                         </div>
-
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="template_selector" class="form-label">Plantilla de Comentarios</label>
                             <select class="form-select" id="template_selector" onchange="insertTemplate()">
                                 <option value="">Seleccione una plantilla...</option>
