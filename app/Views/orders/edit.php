@@ -19,35 +19,16 @@
         </nav>
       </div>
       <div class="col-3 d-flex justify-content-end align-items-center">
-        <?php 
-            $estadoLabel = '';
-            $estadoColor = '';
-            $estadoIcon = '';
-            switch($order['ot_estado']) {
-                case 1: 
-                    $estadoLabel = 'Finalizada'; 
-                    $estadoColor = 'bg-success'; 
-                    $estadoIcon = 'ti-check';
-                    break;
-                case 2: 
-                    $estadoLabel = 'Escalada'; 
-                    $estadoColor = 'bg-warning text-dark'; 
-                    $estadoIcon = 'ti-arrow-up-right';
-                    break;
-                case 3: 
-                    $estadoLabel = 'Incidencia'; 
-                    $estadoColor = 'bg-danger'; 
-                    $estadoIcon = 'ti-alert-circle';
-                    break;
-                case 4: 
-                    $estadoLabel = 'Anulada'; 
-                    $estadoColor = 'bg-dark'; 
-                    $estadoIcon = 'ti-x';
-                    break;
-            }
-        ?>
-        <?php if ($estadoLabel): ?>
-            <span class="badge <?= $estadoColor ?> font-size-14 px-3 py-2 rounded-pill"><i class="ti <?= $estadoIcon ?> me-1"></i> <?= $estadoLabel ?></span>
+        <?php if($order['ot_estado'] == 1): ?>
+            <span class="text-success fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-check"></i> <span class="d-none d-sm-inline text-uppercase">Finalizada</span></span>
+        <?php elseif($order['ot_estado'] == 2): ?>
+            <span class="text-danger fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-alert-circle"></i> <span class="d-none d-sm-inline text-uppercase">Escalada</span></span>
+        <?php elseif($order['ot_estado'] == 3): ?>
+            <span class="text-danger fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-alert-triangle"></i> <span class="d-none d-sm-inline text-uppercase">Incidencia</span></span>
+        <?php elseif($order['ot_estado'] == 4): ?>
+            <span class="text-danger fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-ban"></i> <span class="d-none d-sm-inline text-uppercase">Anulada</span></span>
+        <?php else: ?>
+            <span class="text-warning fw-normal d-flex align-items-center gap-1 fs-4"><i class="ti ti-clock"></i> <span class="d-none d-sm-inline text-uppercase">Pendiente</span></span>
         <?php endif; ?>
       </div>
     </div>
