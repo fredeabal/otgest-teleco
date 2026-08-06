@@ -5,7 +5,7 @@
   <br>
   <b>Plataforma autohospedada de gestión, control y seguimiento de órdenes de trabajo (OT), basada en PHP (CodeIgniter 4) y SQLite3.</b>
   <br><br>
-  <a href="https://github.com/fredeabal/otgest-teleco/releases"><img src="https://img.shields.io/badge/version-1.0.0-orange.svg" alt="Version 1.0.0"></a>
+  <a href="https://github.com/fredeabal/otgest-teleco/releases"><img src="https://img.shields.io/badge/version-2.0-orange.svg" alt="Version 2.0"></a>
   <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4.svg" alt="PHP 8.2+"></a>
   <a href="https://codeigniter.com/"><img src="https://img.shields.io/badge/CodeIgniter-4.x-DD4814.svg" alt="CodeIgniter 4"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License MIT"></a>
