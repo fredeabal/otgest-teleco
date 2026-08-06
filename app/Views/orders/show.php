@@ -81,8 +81,30 @@
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted font-size-13">Operadora</label>
+                        <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_operadora'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted font-size-13">Número de Orden</label>
+                        <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_numero']) ?>">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted font-size-13">Tipo de Trabajo</label>
+                        <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_tipo']) ?>">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
                         <label class="form-label text-muted font-size-13">Cliente</label>
                         <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_cliente']) ?>">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted font-size-13">Dirección</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_direccion']) ?>">
+                            <a href="https://www.google.es/maps?q=<?= urlencode($order['ot_direccion']) ?>" target="_blank" class="btn bg-primary-subtle text-primary d-flex align-items-center justify-content-center" title="Ver en Maps">
+                                <i class="ti ti-map-pin"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label text-muted font-size-13">Teléfono</label>
@@ -95,22 +117,20 @@
                             <?php endif; ?>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label text-muted font-size-13">Dirección</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_direccion']) ?>">
-                            <a href="https://www.google.es/maps?q=<?= urlencode($order['ot_direccion']) ?>" target="_blank" class="btn bg-primary-subtle text-primary d-flex align-items-center justify-content-center" title="Ver en Maps">
-                                <i class="ti ti-map-pin"></i>
-                            </a>
-                        </div>
-                    </div>
                     
                     <div class="col-md-4 mb-3">
-                        <label class="form-label text-muted font-size-13">Trabajo realizado</label>
-                        <input type="text" class="form-control" disabled value="<?= htmlspecialchars($order['ot_tipo']) ?>">
+                        <label class="form-label text-muted font-size-13">Estado de la Orden</label>
+                        <?php 
+                            $estadoTxt = 'Pendiente';
+                            if($order['ot_estado'] == 1) $estadoTxt = 'Finalizada';
+                            if($order['ot_estado'] == 2) $estadoTxt = 'Escalada';
+                            if($order['ot_estado'] == 3) $estadoTxt = 'Incidencia';
+                            if($order['ot_estado'] == 4) $estadoTxt = 'Anulada';
+                        ?>
+                        <input type="text" class="form-control" disabled value="<?= $estadoTxt ?>">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="form-label text-muted font-size-13">Fecha</label>
+                        <label class="form-label text-muted font-size-13">Fecha de la Orden</label>
                         <input type="text" class="form-control" disabled value="<?= date('d/m/Y', strtotime($order['ot_fecha'])) ?>">
                     </div>
                     <div class="col-md-4 mb-3">
@@ -119,8 +139,17 @@
                     </div>
 
                     <div class="col-12 mb-4">
-                        <label class="form-label text-muted font-size-13">Comentarios</label>
-                        <textarea class="form-control" disabled rows="5"><?= htmlspecialchars(str_replace("<br />", "\n", $order['ot_txt'])) ?></textarea>
+                        <label class="form-label text-muted font-size-13">Comentarios Técnicos</label>
+                        <textarea class="form-control" disabled rows="6"><?= htmlspecialchars(str_replace("<br />", "\n", $order['ot_txt'])) ?></textarea>
+                    </div>
+
+                    <div class="col-12 mb-4">
+                        <div class="form-check form-switch px-4 py-3">
+                            <input class="form-check-input switch-custom-size" type="checkbox" role="switch" id="ot_imputada" disabled <?= ($order['ot_imputada'] == 1) ? 'checked' : '' ?>>
+                            <label class="form-check-label ms-2 pt-0 fw-semibold" for="ot_imputada" style="opacity: 0.8;">
+                                Orden Imputada en Almacén
+                            </label>
+                        </div>
                     </div>
                 </div>
 
