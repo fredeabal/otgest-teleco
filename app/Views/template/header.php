@@ -14,6 +14,17 @@
   $userTheme = $currentUser->theme ?? 'system';
   $userGroups = $currentUser ? $currentUser->getGroups() : [];
   $displayRole = !empty($userGroups) ? (config('AuthGroups')->groups[$userGroups[0]]['title'] ?? ucfirst($userGroups[0])) : 'Usuario';
+
+  // Fetch pending imputations for the current user
+  $pendingImputations = 0;
+  if ($currentUser) {
+      $orderModel = new \App\Models\OrderModel();
+      if ($currentUser->can('orders.view_all')) {
+          $pendingImputations = $orderModel->where('ot_imputada', 0)->countAllResults();
+      } else {
+          $pendingImputations = $orderModel->where('ot_imputada', 0)->where('ot_usr', $currentUser->id)->countAllResults();
+      }
+  }
 ?>
 <script>
   // Tema DB > localStorage > preferencia del sistema
@@ -118,6 +129,15 @@
                   <!-- ------------------------------- -->
                   <!-- end language Dropdown -->
                   <!-- ------------------------------- -->
+
+                  <?php if($pendingImputations > 0): ?>
+                  <li class="nav-item">
+                    <a class="nav-link nav-icon-hover" href="<?= base_url('orders') ?>" title="Tienes <?= $pendingImputations ?> órdenes sin imputar" data-bs-toggle="tooltip">
+                      <i class="ti ti-bell-ringing text-danger"></i>
+                      <div class="notification bg-danger rounded-circle"></div>
+                    </a>
+                  </li>
+                  <?php endif; ?>
 
                   <!-- ------------------------------- -->
                   <!-- start profile Dropdown -->
