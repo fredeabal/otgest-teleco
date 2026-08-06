@@ -19,8 +19,35 @@
         </nav>
       </div>
       <div class="col-3 d-flex justify-content-end align-items-center">
-        <?php if ($order['ot_estado'] == 2 || $order['ot_estado'] == 3): ?>
-            <span class="badge bg-warning font-size-14 px-3 py-2 text-dark rounded-pill"><i class="ti ti-alert-circle me-1"></i> Atención Requerida</span>
+        <?php 
+            $estadoLabel = '';
+            $estadoColor = '';
+            $estadoIcon = '';
+            switch($order['ot_estado']) {
+                case 1: 
+                    $estadoLabel = 'Finalizada'; 
+                    $estadoColor = 'bg-success'; 
+                    $estadoIcon = 'ti-check';
+                    break;
+                case 2: 
+                    $estadoLabel = 'Escalada'; 
+                    $estadoColor = 'bg-warning text-dark'; 
+                    $estadoIcon = 'ti-arrow-up-right';
+                    break;
+                case 3: 
+                    $estadoLabel = 'Incidencia'; 
+                    $estadoColor = 'bg-danger'; 
+                    $estadoIcon = 'ti-alert-circle';
+                    break;
+                case 4: 
+                    $estadoLabel = 'Anulada'; 
+                    $estadoColor = 'bg-dark'; 
+                    $estadoIcon = 'ti-x';
+                    break;
+            }
+        ?>
+        <?php if ($estadoLabel): ?>
+            <span class="badge <?= $estadoColor ?> font-size-14 px-3 py-2 rounded-pill"><i class="ti <?= $estadoIcon ?> me-1"></i> <?= $estadoLabel ?></span>
         <?php endif; ?>
       </div>
     </div>
