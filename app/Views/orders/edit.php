@@ -17,6 +17,7 @@
             <li class="breadcrumb-item" aria-current="page">Editar</li>
           </ol>
         </nav>
+      </div>
       <div class="col-3 d-flex justify-content-end align-items-center">
         <div style="font-size: 0.75rem; letter-spacing: 0.5px;">
             <?php if($order['ot_estado'] == 1): ?>
