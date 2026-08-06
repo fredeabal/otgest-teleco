@@ -22,7 +22,6 @@ class OrderModel extends Model
         'ot_usr',
         'ot_fecha',
         'ot_imputada',
-        'ot_pruebas',
         'ot_editado_usr',
         'ot_editado_fecha',
         'ot_estado'

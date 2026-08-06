@@ -52,10 +52,6 @@ class CreateOtgestTables extends Migration
                 'constraint' => 1,
                 'null'       => true,
             ],
-            'ot_pruebas' => [
-                'type' => 'TEXT',
-                'null' => true,
-            ],
             'ot_editado_usr' => [
                 'type'       => 'INT',
                 'constraint' => 11,

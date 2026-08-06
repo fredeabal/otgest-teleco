@@ -30,7 +30,8 @@
             <input type="text" name="start_date" id="start_date" class="form-control mydatepicker custom-date-input" placeholder="Inicio" value="<?= esc($startDate ?? '') ?>" style="display: <?= ($currentFilter ?? '') === 'custom' ? 'block' : 'none' ?> !important; max-width: 120px;">
             <input type="text" name="end_date" id="end_date" class="form-control mydatepicker custom-date-input" placeholder="Fin" value="<?= esc($endDate ?? '') ?>" style="display: <?= ($currentFilter ?? '') === 'custom' ? 'block' : 'none' ?> !important; max-width: 120px;">
             
-            <button type="submit" class="btn btn-primary"><i class="ti ti-filter"></i></button>
+            <button type="submit" class="btn btn-primary" title="Filtrar"><i class="ti ti-filter"></i></button>
+            <button type="submit" formaction="<?= site_url('dashboard/export') ?>" class="btn btn-outline-primary" title="Exportar a Excel (CSV)"><i class="ti ti-file-spreadsheet"></i></button>
           </div>
         </form>
       </div>

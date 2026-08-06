@@ -9,6 +9,7 @@ $routes->get('/', 'HomeController::index');
 $routes->group('', ['filter' => 'session'], static function ($routes) {
     // Dashboards
     $routes->get('dashboard', 'DashboardController::index');
+    $routes->get('dashboard/export', 'DashboardController::export');
     
     // Perfil
     $routes->get('profile', 'ProfileController::index');

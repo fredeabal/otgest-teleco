@@ -156,4 +156,104 @@ class DashboardController extends BaseController
         echo view('dashboards/index', $data);
         echo view('template/footer');
     }
+
+    // ---------------------------------------------------------------------
+    // Exportar datos a CSV
+    // ---------------------------------------------------------------------
+    public function export()
+    {
+        $user = auth()->user();
+        $db = \Config\Database::connect();
+        
+        $filter = $this->request->getGet('filter') ?? 'month';
+        $startDate = $this->request->getGet('start_date');
+        $endDate = $this->request->getGet('end_date');
+        
+        $dbStartDate = $startDate;
+        $dbEndDate = $endDate;
+        
+        if ($startDate) {
+            $d = \DateTime::createFromFormat('d/m/Y', $startDate);
+            if ($d) $dbStartDate = $d->format('Y-m-d');
+        }
+        if ($endDate) {
+            $d = \DateTime::createFromFormat('d/m/Y', $endDate);
+            if ($d) $dbEndDate = $d->format('Y-m-d');
+        }
+        
+        $canViewAll = $user->can('orders.view_all') || $user->inGroup('superadmin', 'admin');
+        
+        $builder = $db->table('ordenes');
+        $builder->select('ordenes.*, users.username as tecnico');
+        $builder->join('users', 'users.id = ordenes.ot_usr', 'left');
+        
+        if (!$canViewAll) {
+            $builder->where('ordenes.ot_usr', $user->id);
+        }
+        
+        if ($filter === 'day') {
+            $builder->where('ordenes.ot_fecha', date('Y-m-d'));
+        } elseif ($filter === 'month') {
+            $builder->where("strftime('%Y-%m', ordenes.ot_fecha)", date('Y-m'));
+        } elseif ($filter === 'year') {
+            $builder->where("strftime('%Y', ordenes.ot_fecha)", date('Y'));
+        } elseif ($filter === '12months') {
+            $builder->where('ordenes.ot_fecha >=', date('Y-m-d', strtotime('-12 months')));
+        } elseif ($filter === 'custom' && $dbStartDate && $dbEndDate) {
+            $builder->where('ordenes.ot_fecha >=', $dbStartDate);
+            $builder->where('ordenes.ot_fecha <=', $dbEndDate);
+        }
+        
+        $builder->orderBy('ordenes.ot_fecha', 'DESC');
+        $builder->orderBy('ordenes.ot_id', 'DESC');
+        $orders = $builder->get()->getResultArray();
+        
+        $filename = "reporte_ordenes_" . date('Ymd_His') . ".csv";
+        
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        
+        $output = fopen('php://output', 'w');
+        
+        // Escribir BOM UTF-8 para que Excel detecte correctamente los acentos y las ñ
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+        
+        // Cabeceras (Separadas por punto y coma para Excel ES)
+        fputcsv($output, ['Fecha', 'Nº Orden', 'Tipo', 'Operadora', 'Cliente', 'Dirección', 'Técnico', 'Estado', 'Imputada'], ';');
+        
+        foreach ($orders as $row) {
+            // Formatear la fecha
+            $fecha = '';
+            if (!empty($row['ot_fecha'])) {
+                $d = \DateTime::createFromFormat('Y-m-d', $row['ot_fecha']);
+                if ($d) $fecha = $d->format('d/m/Y');
+            }
+            
+            // Estado y texto
+            $estado = match($row['ot_estado']) {
+                '1' => 'Pendiente',
+                '2' => 'En Curso',
+                '3' => 'Finalizado',
+                '4' => 'Anulado',
+                default => 'Desconocido'
+            };
+            
+            $imputada = $row['ot_imputada'] ? 'Sí' : 'No';
+            
+            fputcsv($output, [
+                $fecha,
+                $row['ot_numero'],
+                $row['ot_tipo'],
+                $row['ot_operadora'],
+                $row['ot_cliente'],
+                $row['ot_direccion'],
+                $row['tecnico'] ?? 'N/A',
+                $estado,
+                $imputada
+            ], ';');
+        }
+        
+        fclose($output);
+        exit();
+    }
 }
