@@ -20,6 +20,9 @@ class TodoController extends BaseController
     {
         $userId = auth()->user()->id;
 
+        // Limpiar automáticamente tareas completadas antiguas de la base de datos
+        $this->todoModel->where('todo_completed', 1)->delete();
+
         $data['pendingTodos']   = $this->todoModel->where('todo_usr', $userId)
                                                   ->where('todo_completed', 0)
                                                   ->orderBy('todo_id', 'DESC')
