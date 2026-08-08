@@ -666,3 +666,62 @@
 .delete-img-btn { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
 .delete-img-icon { font-size: 12px; }
 
+/* =============================================
+   Estilos para la Lista de Tareas (To-Do)
+   ============================================= */
+.todo-item {
+    background-color: var(--bs-card-bg) !important;
+    border-color: var(--bs-border-color) !important;
+    transition: all 0.3s ease;
+}
+
+.todo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-color: rgba(var(--bs-primary-rgb), 0.3) !important;
+}
+
+.todo-item-completed {
+    opacity: 0.65;
+}
+
+.todo-completed-text {
+    text-decoration: line-through !important;
+}
+
+.btn-todo-toggle {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.btn-todo-toggle:hover {
+    transform: scale(1.15);
+    color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .todo-item-completed {
+    background-color: rgba(18, 26, 31, 0.5) !important;
+}
+
+/* =============================================
+   Estilos de Badge y Dropdown de Cabecera
+   ============================================= */
+.header-notification-badge {
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.35rem;
+    line-height: 1;
+    border-radius: 50rem;
+}
+
+.notification-dropdown-width {
+    min-width: 290px;
+}
+
+.todo-date-small {
+    font-size: 0.65rem !important;
+}
+

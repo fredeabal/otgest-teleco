@@ -25,6 +25,13 @@
           $pendingImputations = $orderModel->where('ot_imputada', 0)->where('ot_usr', $currentUser->id)->countAllResults();
       }
   }
+
+  // Fetch pending tasks count for the current user
+  $pendingTodosCount = 0;
+  if ($currentUser) {
+      $todoModel = new \App\Models\TodoModel();
+      $pendingTodosCount = $todoModel->where('todo_usr', $currentUser->id)->where('todo_completed', 0)->countAllResults();
+  }
 ?>
 <script>
   // Tema DB > localStorage > preferencia del sistema
@@ -130,11 +137,45 @@
                   <!-- end language Dropdown -->
                   <!-- ------------------------------- -->
 
-                  <?php if($pendingImputations > 0): ?>
-                  <li class="nav-item">
-                    <a class="nav-link nav-icon-hover" href="<?= base_url('orders?imputada=0') ?>" title="Tienes <?= $pendingImputations ?> órdenes sin imputar" data-bs-toggle="tooltip">
+                  <?php 
+                  $totalAlerts = $pendingImputations + $pendingTodosCount;
+                  if($totalAlerts > 0): 
+                  ?>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link nav-icon-hover position-relative" href="javascript:void(0)" id="dropNotifications" data-bs-toggle="dropdown" aria-expanded="false" title="Tienes <?= $totalAlerts ?> notificaciones pendientes" data-bs-toggle="tooltip">
                       <i class="ti ti-bell-ringing text-danger fs-6"></i>
+                      <span class="badge rounded-pill bg-danger header-notification-badge">
+                        <?= $totalAlerts ?>
+                      </span>
                     </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up py-3 px-3 notification-dropdown-width" aria-labelledby="dropNotifications">
+                      <h6 class="mb-3 fw-semibold">Notificaciones</h6>
+                      <div class="message-body">
+                        <?php if($pendingImputations > 0): ?>
+                        <a href="<?= base_url('orders?imputada=0') ?>" class="d-flex align-items-center gap-3 py-2 text-decoration-none dropdown-item rounded-2">
+                          <span class="d-flex align-items-center justify-content-center bg-danger-subtle rounded-circle p-2 text-danger">
+                            <i class="ti ti-alert-triangle fs-5"></i>
+                          </span>
+                          <div class="w-100">
+                            <h6 class="mb-0 fs-3 fw-semibold">Órdenes sin imputar</h6>
+                            <span class="fs-2 d-block text-muted">Tienes <?= $pendingImputations ?> órdenes sin imputar</span>
+                          </div>
+                        </a>
+                        <?php endif; ?>
+                        
+                        <?php if($pendingTodosCount > 0): ?>
+                        <a href="<?= base_url('todos') ?>" class="d-flex align-items-center gap-3 py-2 text-decoration-none dropdown-item rounded-2">
+                          <span class="d-flex align-items-center justify-content-center bg-warning-subtle rounded-circle p-2 text-warning">
+                            <i class="ti ti-list-check fs-5"></i>
+                          </span>
+                          <div class="w-100">
+                            <h6 class="mb-0 fs-3 fw-semibold">Tareas pendientes</h6>
+                            <span class="fs-2 d-block text-muted">Tienes <?= $pendingTodosCount ?> tareas pendientes</span>
+                          </div>
+                        </a>
+                        <?php endif; ?>
+                      </div>
+                    </div>
                   </li>
                   <?php endif; ?>
 
