@@ -31,7 +31,7 @@
   if ($currentUser) {
       try {
           $todoModel = new \App\Models\TodoModel();
-          $pendingTodosCount = $todoModel->where('todo_usr', $currentUser->id)->where('todo_completed', 0)->countAllResults();
+          $pendingTodosCount = $todoModel->where('todo_usr', $currentUser->id)->countAllResults();
       } catch (\Throwable $e) {
           $pendingTodosCount = 0;
       }

@@ -14,8 +14,7 @@ class TodoModel extends Model
 
     protected $allowedFields    = [
         'todo_usr',
-        'todo_title',
-        'todo_completed'
+        'todo_title'
     ];
 
     protected $useTimestamps = true;

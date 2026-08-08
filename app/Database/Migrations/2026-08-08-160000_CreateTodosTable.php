@@ -23,11 +23,6 @@ class CreateTodosTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
             ],
-            'todo_completed' => [
-                'type'       => 'TINYINT',
-                'constraint' => 1,
-                'default'    => 0,
-            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
