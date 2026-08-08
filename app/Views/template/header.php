@@ -29,8 +29,12 @@
   // Fetch pending tasks count for the current user
   $pendingTodosCount = 0;
   if ($currentUser) {
-      $todoModel = new \App\Models\TodoModel();
-      $pendingTodosCount = $todoModel->where('todo_usr', $currentUser->id)->where('todo_completed', 0)->countAllResults();
+      try {
+          $todoModel = new \App\Models\TodoModel();
+          $pendingTodosCount = $todoModel->where('todo_usr', $currentUser->id)->where('todo_completed', 0)->countAllResults();
+      } catch (\Throwable $e) {
+          $pendingTodosCount = 0;
+      }
   }
 ?>
 <script>
