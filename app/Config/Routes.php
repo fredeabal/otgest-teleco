@@ -42,7 +42,6 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     // Gestión de Tareas (To-Do)
     $routes->get('todos', 'TodoController::index');
     $routes->post('todos/store', 'TodoController::store');
-    $routes->post('todos/toggle/(:num)', 'TodoController::toggle/$1');
     $routes->post('todos/delete/(:num)', 'TodoController::delete/$1');
 });
 

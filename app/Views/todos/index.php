@@ -66,9 +66,9 @@
                         <?php foreach ($pendingTodos as $todo): ?>
                             <div class="todo-item d-flex align-items-center justify-content-between p-3 mb-2 rounded border">
                                 <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                    <form action="<?= site_url('todos/toggle/' . $todo['todo_id']) ?>" method="POST" class="m-0">
+                                    <form action="<?= site_url('todos/delete/' . $todo['todo_id']) ?>" method="POST" class="m-0">
                                         <?= csrf_field() ?>
-                                        <button type="submit" class="btn-todo-toggle border-0 bg-transparent p-0 text-muted" title="Marcar como completada">
+                                        <button type="submit" class="btn-todo-toggle border-0 bg-transparent p-0 text-muted" title="Completar y eliminar">
                                             <i class="ti ti-square fs-6"></i>
                                         </button>
                                     </form>

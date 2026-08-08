@@ -64,27 +64,6 @@ class TodoController extends BaseController
     }
 
     // ---------------------------------------------------------------------
-    // Cambiar el estado de una tarea (Pendiente <-> Completada)
-    // ---------------------------------------------------------------------
-    public function toggle($id = null)
-    {
-        $todo = $this->todoModel->find($id);
-
-        if (!$todo || $todo['todo_usr'] != auth()->user()->id) {
-            return redirect()->to('todos')->with('error', 'Tarea no encontrada o sin autorización.');
-        }
-
-        $newStatus = ($todo['todo_completed'] == 1) ? 0 : 1;
-
-        if ($this->todoModel->update($id, ['todo_completed' => $newStatus])) {
-            $msg = ($newStatus == 1) ? 'Tarea completada' : 'Tarea pendiente de realización';
-            return redirect()->to('todos')->with('message', $msg);
-        }
-
-        return redirect()->to('todos')->with('error', 'No se pudo cambiar el estado de la tarea.');
-    }
-
-    // ---------------------------------------------------------------------
     // Eliminar una tarea
     // ---------------------------------------------------------------------
     public function delete($id = null)
