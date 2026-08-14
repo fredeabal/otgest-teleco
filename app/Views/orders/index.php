@@ -166,12 +166,12 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-2" href="<?= site_url('orders/show/' . $order['ot_id']) ?>">
+                                                <a class="dropdown-item d-flex align-items-center gap-2 text-body" href="<?= site_url('orders/show/' . $order['ot_id']) ?>">
                                                     <i class="ti ti-eye fs-4"></i> Ver Detalle
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-2" href="<?= site_url('orders/edit/' . $order['ot_id']) ?>">
+                                                <a class="dropdown-item d-flex align-items-center gap-2 text-body" href="<?= site_url('orders/edit/' . $order['ot_id']) ?>">
                                                     <i class="ti ti-pencil fs-4"></i> Editar
                                                 </a>
                                             </li>

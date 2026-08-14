@@ -14,7 +14,7 @@
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; background-image: linear-gradient(#ffffff, #ffffff); margin: 0; padding: 40px 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         <tr>
             <td align="center">
-                <img src="<?= base_url('assets/images/logos/dark-logo.svg') ?>" alt="Logo" style="max-width: 180px; margin-bottom: 30px; display: block;">
+                <img src="<?= base_url('assets/images/logos/email-logo.png') ?>" alt="Logo" style="max-width: 180px; margin-bottom: 30px; display: block;">
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 500px; background-color: #f8f9fa; background-image: linear-gradient(#f8f9fa, #f8f9fa); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e9ecef;">
                     <tr>
                         <td align="left" style="padding: 40px;">
@@ -33,7 +33,7 @@
                             </p>
                             
                             <div style="text-align: center; margin-bottom: 30px;">
-                                <a href="<?= url_to('verify-magic-link') ?>?token=<?= $token ?>" style="display: inline-block; padding: 12px 24px; background-color: #F38020; background-image: linear-gradient(#F38020, #F38020); color: #ffffff; -webkit-text-fill-color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px;">
+                                <a href="<?= url_to('verify-magic-link') ?>?token=<?= $token ?>" style="display: inline-block; padding: 12px 24px; background-color: #5d87ff; background-image: linear-gradient(#5d87ff, #5d87ff); color: #ffffff; -webkit-text-fill-color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px;">
                                     Iniciar Sesión Ahora
                                 </a>
                             </div>

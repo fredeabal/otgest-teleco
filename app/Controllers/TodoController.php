@@ -79,4 +79,24 @@ class TodoController extends BaseController
 
         return redirect()->to('todos')->with('error', 'No se pudo eliminar la tarea.');
     }
+    // ---------------------------------------------------------------------
+    // Marcar/Desmarcar una tarea como completada
+    // ---------------------------------------------------------------------
+    public function toggle($id = null)
+    {
+        $todo = $this->todoModel->find($id);
+
+        if (!$todo || $todo['todo_usr'] != auth()->user()->id) {
+            return redirect()->to('todos')->with('error', 'Tarea no encontrada o sin autorización.');
+        }
+
+        $newStatus = $todo['todo_completed'] == 1 ? 0 : 1;
+        $message = $newStatus == 1 ? 'Tarea completada' : 'Tarea desmarcada';
+
+        if ($this->todoModel->update($id, ['todo_completed' => $newStatus])) {
+            return redirect()->to('todos')->with('message', $message);
+        }
+
+        return redirect()->to('todos')->with('error', 'No se pudo actualizar la tarea.');
+    }
 }

@@ -92,7 +92,7 @@
           icon: 'warning',
           background: isDark ? '#0b1114' : '#f8f9fa',
           color: isDark ? '#ffffff' : '#0b1114',
-          iconColor: '#F38020',
+          iconColor: '#5d87ff',
           showCancelButton: true,
           reverseButtons: true,
           customClass: {
@@ -126,7 +126,7 @@
             icon: 'warning',
             background: isDark ? '#0b1114' : '#f8f9fa',
             color: isDark ? '#ffffff' : '#0b1114',
-            iconColor: '#F38020',
+            iconColor: '#5d87ff',
             showCancelButton: true,
             reverseButtons: true,
             customClass: {

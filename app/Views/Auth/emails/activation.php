@@ -14,7 +14,7 @@
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; background-image: linear-gradient(#ffffff, #ffffff); margin: 0; padding: 40px 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         <tr>
             <td align="center">
-                <img src="<?= base_url('assets/images/logos/dark-logo.svg') ?>" alt="Logo" style="max-width: 180px; margin-bottom: 30px; display: block;">
+                <img src="<?= base_url('assets/images/logos/email-logo.png') ?>" alt="Logo" style="max-width: 180px; margin-bottom: 30px; display: block;">
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 500px; background-color: #f8f9fa; background-image: linear-gradient(#f8f9fa, #f8f9fa); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e9ecef;">
                     <tr>
                         <td align="left" style="padding: 40px;">
@@ -29,7 +29,7 @@
                             </p>
                             
                             <div style="text-align: center; margin: 32px 0;">
-                                <div style="background-color: #ffffff; color: #F38020; padding: 16px 32px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 32px; letter-spacing: 6px; border: 1px solid #F38020;">
+                                <div style="background-color: #ffffff; color: #5d87ff; padding: 16px 32px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 32px; letter-spacing: 6px; border: 1px solid #5d87ff;">
                                     <?= $code ?>
                                 </div>
                             </div>
