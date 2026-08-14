@@ -77,14 +77,6 @@
                                         <small class="text-muted ms-sm-2 todo-date-small mt-1 mt-sm-0"><?= date('d/m/y', strtotime($todo['created_at'])) ?></small>
                                     </div>
                                 </div>
-                                <div class="todo-actions ms-2">
-                                    <form action="<?= site_url('todos/delete/' . $todo['todo_id']) ?>" method="POST" data-confirm="¿Deseas eliminar esta tarea de forma permanente?" class="m-0">
-                                        <?= csrf_field() ?>
-                                        <button type="submit" class="btn btn-sm btn-icon btn-outline-primary" title="Eliminar">
-                                            <i class="ti ti-trash fs-4"></i>
-                                        </button>
-                                    </form>
-                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>

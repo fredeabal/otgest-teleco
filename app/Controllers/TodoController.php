@@ -90,13 +90,10 @@ class TodoController extends BaseController
             return redirect()->to('todos')->with('error', 'Tarea no encontrada o sin autorización.');
         }
 
-        $newStatus = $todo['todo_completed'] == 1 ? 0 : 1;
-        $message = $newStatus == 1 ? 'Tarea completada' : 'Tarea desmarcada';
-
-        if ($this->todoModel->update($id, ['todo_completed' => $newStatus])) {
-            return redirect()->to('todos')->with('message', $message);
+        if ($this->todoModel->delete($id)) {
+            return redirect()->to('todos')->with('message', '¡Tarea completada!');
         }
 
-        return redirect()->to('todos')->with('error', 'No se pudo actualizar la tarea.');
+        return redirect()->to('todos')->with('error', 'No se pudo completar la tarea.');
     }
 }
