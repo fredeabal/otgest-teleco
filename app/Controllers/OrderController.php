@@ -30,7 +30,9 @@ class OrderController extends BaseController
     {
         $search = $this->request->getGet('search');
 
-        $query = $this->orderModel->orderBy('ot_id', 'DESC');
+        $query = $this->orderModel->select('ordenes.*, users.username')
+                                  ->join('users', 'users.id = ordenes.ot_usr', 'left')
+                                  ->orderBy('ot_id', 'DESC');
         
         if (!empty($search)) {
             // Eliminar espacios de la búsqueda del usuario
@@ -56,6 +58,8 @@ class OrderController extends BaseController
         $imputada = $this->request->getGet('imputada');
         $fecha_desde = $this->request->getGet('fecha_desde');
         $fecha_hasta = $this->request->getGet('fecha_hasta');
+        $usuario = null;
+        $users = [];
 
         if (!empty($estado)) {
             $query->where('ot_estado', $estado);
@@ -91,9 +95,23 @@ class OrderController extends BaseController
             }
         }
 
-        // Si el usuario no tiene permisos para ver todas (ej. no es admin), solo ve las suyas
-        if (!auth()->user()->can('orders.view_all')) {
-            $query->where('ot_usr', auth()->user()->id);
+        // Si el usuario tiene permisos para ver todas (ej. es admin), cargamos la lista de usuarios y filtramos si se solicita
+        if (auth()->user()->can('orders.view_all')) {
+            $usersModel = auth()->getProvider();
+            $users = $usersModel->groupStart()
+                                ->where('status !=', 'banned')
+                                ->orWhere('status', null)
+                                ->groupEnd()
+                                ->orderBy('username', 'ASC')
+                                ->findAll();
+
+            $usuario = $this->request->getGet('usuario');
+            if ($usuario !== null && $usuario !== '') {
+                $query->where('ordenes.ot_usr', $usuario);
+            }
+        } else {
+            // Si el usuario no tiene permisos para ver todas, solo ve las suyas
+            $query->where('ordenes.ot_usr', auth()->user()->id);
         }
 
         $data['orders'] = $query->paginate(50);
@@ -105,6 +123,8 @@ class OrderController extends BaseController
         $data['imputada'] = $imputada;
         $data['fecha_desde'] = $fecha_desde;
         $data['fecha_hasta'] = $fecha_hasta;
+        $data['users'] = $users;
+        $data['usuario'] = $usuario;
 
         echo view('template/header', ['title' => 'Órdenes de Trabajo']);
         echo view('orders/index', $data);

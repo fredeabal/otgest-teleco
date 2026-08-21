@@ -95,14 +95,34 @@
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
-                            <div class="col-md-6">
-                                <label class="form-label fs-2 fw-semibold">Fecha Desde</label>
-                                <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-desde" name="fecha_desde" placeholder="DD/MM/YYYY" value="<?= isset($fecha_desde) ? esc($fecha_desde) : '' ?>" autocomplete="off">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fs-2 fw-semibold">Fecha Hasta</label>
-                                <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-hasta" name="fecha_hasta" placeholder="DD/MM/YYYY" value="<?= isset($fecha_hasta) ? esc($fecha_hasta) : '' ?>" autocomplete="off">
-                            </div>
+                            <?php if (auth()->user()->can('orders.view_all')): ?>
+                                <div class="col-md-4">
+                                    <label class="form-label fs-2 fw-semibold">Fecha Desde</label>
+                                    <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-desde" name="fecha_desde" placeholder="DD/MM/YYYY" value="<?= isset($fecha_desde) ? esc($fecha_desde) : '' ?>" autocomplete="off">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fs-2 fw-semibold">Fecha Hasta</label>
+                                    <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-hasta" name="fecha_hasta" placeholder="DD/MM/YYYY" value="<?= isset($fecha_hasta) ? esc($fecha_hasta) : '' ?>" autocomplete="off">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fs-2 fw-semibold">Técnico</label>
+                                    <select class="form-select filter-select" id="filter-usuario" name="usuario">
+                                        <option value="">Todos los técnicos</option>
+                                        <?php foreach ($users as $usr): ?>
+                                            <option value="<?= $usr->id ?>" <?= (isset($usuario) && $usuario == $usr->id) ? 'selected' : '' ?>><?= esc($usr->username) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            <?php else: ?>
+                                <div class="col-md-6">
+                                    <label class="form-label fs-2 fw-semibold">Fecha Desde</label>
+                                    <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-desde" name="fecha_desde" placeholder="DD/MM/YYYY" value="<?= isset($fecha_desde) ? esc($fecha_desde) : '' ?>" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fs-2 fw-semibold">Fecha Hasta</label>
+                                    <input type="text" class="form-control filter-input filter-datepicker" id="filter-fecha-hasta" name="fecha_hasta" placeholder="DD/MM/YYYY" value="<?= isset($fecha_hasta) ? esc($fecha_hasta) : '' ?>" autocomplete="off">
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -121,6 +141,9 @@
                                 <th class="text-start">Fecha</th>
                                 <th class="text-center">Nº OT</th>
                                 <th class="text-center d-none d-md-table-cell">Tipo</th>
+                                <?php if (auth()->user()->can('orders.view_all')): ?>
+                                    <th class="text-start d-none d-md-table-cell">Técnico</th>
+                                <?php endif; ?>
                                 <th class="text-start d-none d-md-table-cell">Cliente</th>
                                 <th class="text-center d-none d-md-table-cell">Estado</th>
                                 <th class="text-end"></th>
@@ -145,6 +168,9 @@
                                     </div>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell"><?= esc($order['ot_tipo']) ?></td>
+                                <?php if (auth()->user()->can('orders.view_all')): ?>
+                                    <td class="text-start d-none d-md-table-cell"><?= esc($order['username'] ?? 'Sistema') ?></td>
+                                <?php endif; ?>
                                 <td class="text-start d-none d-md-table-cell"><?= esc($order['ot_cliente']) ?></td>
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php if($order['ot_estado'] == 1): ?>
@@ -241,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const imputada = document.getElementById('filter-imputada').value;
         const fechaDesde = document.getElementById('filter-fecha-desde').value;
         const fechaHasta = document.getElementById('filter-fecha-hasta').value;
+        const usuarioEl = document.getElementById('filter-usuario');
+        const usuario = usuarioEl ? usuarioEl.value : '';
         
         const url = new URL(form.action);
         
@@ -264,6 +292,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (fechaHasta !== '') url.searchParams.set('fecha_hasta', fechaHasta);
         else url.searchParams.delete('fecha_hasta');
+
+        if (usuario !== '') url.searchParams.set('usuario', usuario);
+        else url.searchParams.delete('usuario');
 
         container.style.opacity = '0.5';
         container.style.pointerEvents = 'none';
