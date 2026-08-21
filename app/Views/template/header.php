@@ -101,6 +101,32 @@
         border-radius: 6px !important;
         text-shadow: none;
     }
+    /* Arreglo para visibilidad del texto y controles del Datepicker en modo Light/Dark */
+    .datepicker-dropdown {
+        background-color: var(--bs-body-bg) !important;
+        color: var(--bs-heading-color) !important;
+        border: 1px solid var(--bs-border-color) !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .datepicker table tr td, 
+    .datepicker table tr th {
+        color: var(--bs-heading-color) !important;
+    }
+    .datepicker table tr td.day.old, 
+    .datepicker table tr td.day.new {
+        color: var(--bs-secondary-color, #999) !important;
+        opacity: 0.5;
+    }
+    .datepicker .datepicker-switch:hover,
+    .datepicker .prev:hover,
+    .datepicker .next:hover,
+    .datepicker tfoot tr th:hover {
+        background-color: var(--bs-secondary-bg, #f0f0f0) !important;
+        color: var(--bs-heading-color) !important;
+    }
+    .datepicker table tr td.day:hover {
+        background-color: var(--bs-secondary-bg, #f0f0f0);
+    }
   </style>
 
   <title><?= isset($title) ? $title . ' | OtGest' : 'OtGest | Sistema de Gestión' ?></title>

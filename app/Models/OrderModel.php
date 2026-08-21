@@ -25,7 +25,8 @@ class OrderModel extends Model
         'ot_imputada',
         'ot_editado_usr',
         'ot_editado_fecha',
-        'ot_estado'
+        'ot_estado',
+        'ot_precio'
     ];
 
     protected $useTimestamps = false;

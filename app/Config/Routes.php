@@ -20,6 +20,9 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     $routes->get('orders', 'OrderController::index');
     $routes->get('orders/create', 'OrderController::create');
     $routes->post('orders/store', 'OrderController::store');
+    $routes->get('orders/billing', 'OrderController::billing');
+    $routes->get('orders/billing/pdf', 'OrderController::billingPdf');
+    $routes->post('orders/billing/email', 'OrderController::billingEmail');
     $routes->get('orders/show/(:num)', 'OrderController::show/$1');
     $routes->get('orders/edit/(:num)', 'OrderController::edit/$1');
     $routes->post('orders/update/(:num)', 'OrderController::update/$1');

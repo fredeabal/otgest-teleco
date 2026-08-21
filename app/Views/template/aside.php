@@ -39,6 +39,14 @@
               </a>
             </li>
             <li class="sidebar-item">
+              <a class="sidebar-link" href="<?= base_url('orders/billing') ?>" aria-expanded="false">
+                <span>
+                  <i class="ti ti-receipt-2"></i>
+                </span>
+                <span class="hide-menu">Facturación</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
               <a class="sidebar-link" href="<?= base_url('todos') ?>" aria-expanded="false">
                 <span>
                   <i class="ti ti-list-check"></i>

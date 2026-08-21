@@ -12,6 +12,8 @@
   <script src="<?= base_url('assets/') ?>js/theme/theme.js"></script>
   <script src="<?= base_url('assets/') ?>js/theme/app.min.js"></script>
   <script src="<?= base_url('assets/') ?>js/theme/sidebarmenu.js"></script>
+  <!-- Select2 JS -->
+  <script src="<?= base_url('assets/') ?>libs/select2/dist/js/select2.min.js"></script>
   <!-- Bootstrap Datepicker JS -->
   <script src="<?= base_url('assets/') ?>libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
   <script src="<?= base_url('assets/') ?>libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>

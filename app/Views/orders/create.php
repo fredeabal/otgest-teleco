@@ -125,10 +125,15 @@
                         <div class="col-12 mb-4">
                             <div class="form-check form-switch px-4 py-3">
                                 <input class="form-check-input switch-custom-size" type="checkbox" role="switch" id="ot_imputada" name="ot_imputada" value="1" <?= (old('ot_imputada') == 1) ? 'checked' : '' ?>>
-                                <label class="form-check-label ms-2 pt-0 fw-semibold cursor-pointer" for="ot_imputada">
+                                <label class="form-check-label text-body ms-2 pt-0 fw-semibold cursor-pointer" for="ot_imputada">
                                     Orden Imputada en Almacén
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="ot_precio" class="form-label">Importe (€)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="ot_precio" name="ot_precio" value="<?= old('ot_precio', '0.00') ?>">
                         </div>
                     </div>
 

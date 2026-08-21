@@ -133,7 +133,6 @@
                         <label class="form-label text-muted font-size-13">Técnico</label>
                         <input type="text" class="form-control" disabled value="<?= htmlspecialchars($tecnico_nombre ?? $order['ot_usr']) ?>">
                     </div>
-
                     <div class="col-12 mb-4">
                         <label class="form-label text-muted font-size-13">Comentarios Técnicos</label>
                         <textarea class="form-control" disabled rows="6"><?= htmlspecialchars(str_replace("<br />", "\n", $order['ot_txt'])) ?></textarea>
@@ -142,10 +141,15 @@
                     <div class="col-12 mb-4">
                         <div class="form-check form-switch px-4 py-3">
                             <input class="form-check-input switch-custom-size" type="checkbox" role="switch" id="ot_imputada" disabled <?= ($order['ot_imputada'] == 1) ? 'checked' : '' ?>>
-                            <label class="form-check-label ms-2 pt-0 fw-semibold opacity-80" for="ot_imputada">
+                            <label class="form-check-label text-body ms-2 pt-0 fw-semibold opacity-80" for="ot_imputada">
                                 Orden Imputada en Almacén
                             </label>
                         </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted font-size-13">Importe</label>
+                        <input type="text" class="form-control" disabled value="<?= number_format($order['ot_precio'], 2, ',', '.') ?> €">
                     </div>
                 </div>
 

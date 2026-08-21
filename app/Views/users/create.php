@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <div class="mb-6 mt-4 ms-2 form-check form-switch px-4 py-6">
                         <input class="form-check-input switch-custom-size" type="checkbox" role="switch" id="active" name="active" value="1" <?= old('active', 1) ? 'checked' : '' ?>>
-                        <label class="form-check-label ms-2 pt-0 fw-semibold cursor-pointer" for="active">
+                        <label class="form-check-label text-body ms-2 pt-0 fw-semibold cursor-pointer" for="active">
                             Cuenta Activa
                         </label>
                     </div>

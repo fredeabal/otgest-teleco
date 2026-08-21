@@ -6,6 +6,7 @@ use App\Models\OrderModel;
 use App\Models\TemplateModel;
 use App\Models\ImageModel;
 use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\Shield\Models\UserModel;
 
 class OrderController extends BaseController
 {
@@ -145,6 +146,7 @@ class OrderController extends BaseController
             'ot_contacto'  => 'permit_empty|numeric',
             'ot_txt'       => 'required',
             'ot_estado'    => 'required',
+            'ot_precio'    => 'permit_empty|decimal',
         ];
 
         if (!$this->validate($rules)) {
@@ -152,6 +154,7 @@ class OrderController extends BaseController
         }
 
         $imputada = $this->request->getPost('ot_imputada') == 1 ? 1 : 0;
+        $precio = $this->request->getPost('ot_precio');
 
         $data = [
             'ot_numero'    => $this->request->getPost('ot_numero'),
@@ -165,6 +168,7 @@ class OrderController extends BaseController
             'ot_imputada'  => $imputada,
             'ot_fecha'     => $this->request->getPost('ot_fecha') ?: date('Y-m-d'),
             'ot_usr'       => auth()->user()->id,
+            'ot_precio'    => !empty($precio) ? floatval($precio) : 0.00,
         ];
 
         if ($this->orderModel->insert($data)) {
@@ -272,6 +276,7 @@ class OrderController extends BaseController
             'ot_contacto'  => 'permit_empty|numeric',
             'ot_txt'       => 'required',
             'ot_estado'    => 'required',
+            'ot_precio'    => 'permit_empty|decimal',
         ];
 
         if (!$this->validate($rules)) {
@@ -279,6 +284,7 @@ class OrderController extends BaseController
         }
 
         $imputada = $this->request->getPost('ot_imputada') == 1 ? 1 : 0;
+        $precio = $this->request->getPost('ot_precio');
 
         $otFecha = $this->request->getPost('ot_fecha');
         if ($otFecha) {
@@ -299,6 +305,7 @@ class OrderController extends BaseController
             'ot_fecha'     => $otFecha ?: $order['ot_fecha'],
             'ot_editado_usr' => auth()->user()->id,
             'ot_editado_fecha' => date('Y-m-d'),
+            'ot_precio'    => !empty($precio) ? floatval($precio) : 0.00,
         ];
 
         if ($this->orderModel->update($id, $data)) {
@@ -423,5 +430,270 @@ class OrderController extends BaseController
             'status' => 'ok',
             'csrfToken' => $csrfHash
         ]);
+    }
+
+    // ---------------------------------------------------------------------
+    // Panel de Facturación/Resumen Mensual
+    // ---------------------------------------------------------------------
+    public function billing()
+    {
+        $mes = $this->request->getGet('mes') ?: date('m');
+        $year = $this->request->getGet('year') ?: date('Y');
+
+        $userId = auth()->user()->id;
+        $canViewAll = auth()->user()->can('orders.view_all');
+        
+        $selectedUserId = $this->request->getGet('user_id');
+
+        $query = $this->orderModel->where('strftime("%m", ot_fecha)', $mes)
+                                  ->where('strftime("%Y", ot_fecha)', $year);
+
+        // Si no es administrador, filtrar solo sus órdenes
+        if (!$canViewAll) {
+            $query->where('ot_usr', $userId);
+        } else if ($selectedUserId) {
+            // Si es administrador y seleccionó un técnico específico
+            $query->where('ot_usr', $selectedUserId);
+        }
+
+        $users = [];
+        if ($canViewAll) {
+            $usersModel = new UserModel();
+            $users = $usersModel->findAll();
+        }
+
+        $orders = $query->orderBy('ot_fecha', 'ASC')->findAll();
+
+        $subtotal = 0;
+        foreach ($orders as $order) {
+            $subtotal += floatval($order['ot_precio']);
+        }
+        $ivaTasa = 0.21; // 21% fijo
+        $iva = $subtotal * $ivaTasa;
+        $total = $subtotal + $iva;
+
+        $data = [
+            'orders'         => $orders,
+            'mes'            => $mes,
+            'year'           => $year,
+            'subtotal'       => $subtotal,
+            'iva'            => $iva,
+            'total'          => $total,
+            'canViewAll'     => $canViewAll,
+            'users'          => $users,
+            'selectedUserId' => $selectedUserId,
+        ];
+
+        echo view('template/header', ['title' => 'Facturación Mensual']);
+        echo view('orders/billing', $data);
+        echo view('template/footer');
+    }
+
+    // ---------------------------------------------------------------------
+    // Descargar PDF de Facturación Mensual
+    // ---------------------------------------------------------------------
+    public function billingPdf()
+    {
+        $mes = $this->request->getGet('mes') ?: date('m');
+        $year = $this->request->getGet('year') ?: date('Y');
+        $selectedUserId = $this->request->getGet('user_id');
+
+        $userId = auth()->user()->id;
+        $canViewAll = auth()->user()->can('orders.view_all');
+
+        $query = $this->orderModel->where('strftime("%m", ot_fecha)', $mes)
+                                  ->where('strftime("%Y", ot_fecha)', $year);
+
+        if (!$canViewAll) {
+            $query->where('ot_usr', $userId);
+        } else if ($selectedUserId) {
+            $query->where('ot_usr', $selectedUserId);
+        }
+
+        $orders = $query->orderBy('ot_fecha', 'ASC')->findAll();
+
+        $subtotal = 0;
+        foreach ($orders as $order) {
+            $subtotal += floatval($order['ot_precio']);
+        }
+        $ivaTasa = 0.21;
+        $iva = $subtotal * $ivaTasa;
+        $total = $subtotal + $iva;
+
+        $userProvider = auth()->getProvider();
+        $user = $userProvider->findById($userId);
+        $tecnicoNombre = $user ? $user->username : 'Técnico';
+
+        $data = [
+            'orders'        => $orders,
+            'mes'           => $mes,
+            'year'          => $year,
+            'subtotal'      => $subtotal,
+            'iva'           => $iva,
+            'total'         => $total,
+            'tecnicoNombre' => $tecnicoNombre,
+        ];
+
+        // Generar PDF usando Dompdf
+        $dompdf = new \Dompdf\Dompdf([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled'      => true
+        ]);
+
+        $html = view('orders/billing_pdf', $data);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        $meses = [
+            '01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril',
+            '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto',
+            '09' => 'Septiembre', '10' => 'Octubre', '11' => 'Noviembre', '12' => 'Diciembre'
+        ];
+        $nombreMes = $meses[$mes] ?? $mes;
+
+        $dompdf->stream("Reporte_Instalaciones_{$nombreMes}_{$year}.pdf", ["Attachment" => true]);
+        exit();
+    }
+
+    // ---------------------------------------------------------------------
+    // Enviar PDF de Facturación Mensual por Correo
+    // ---------------------------------------------------------------------
+    public function billingEmail()
+    {
+        $mes = $this->request->getPost('mes') ?: date('m');
+        $year = $this->request->getPost('year') ?: date('Y');
+        $emailDestino = $this->request->getPost('email_destino');
+        $selectedUserId = $this->request->getPost('user_id');
+
+        if (empty($emailDestino) || !filter_var($emailDestino, FILTER_VALIDATE_EMAIL)) {
+            return redirect()->back()->with('error', 'Por favor, proporciona un correo destino válido.');
+        }
+
+        $userId = auth()->user()->id;
+        $canViewAll = auth()->user()->can('orders.view_all');
+
+        $query = $this->orderModel->where('strftime("%m", ot_fecha)', $mes)
+                                  ->where('strftime("%Y", ot_fecha)', $year);
+
+        if (!$canViewAll) {
+            $query->where('ot_usr', $userId);
+        } else if ($selectedUserId) {
+            $query->where('ot_usr', $selectedUserId);
+        }
+
+        $orders = $query->orderBy('ot_fecha', 'ASC')->findAll();
+
+        $subtotal = 0;
+        foreach ($orders as $order) {
+            $subtotal += floatval($order['ot_precio']);
+        }
+        $ivaTasa = 0.21;
+        $iva = $subtotal * $ivaTasa;
+        $total = $subtotal + $iva;
+
+        $userProvider = auth()->getProvider();
+        $user = $userProvider->findById($selectedUserId ?: $userId);
+        $tecnicoNombre = $user ? $user->username : 'Técnico';
+
+        $data = [
+            'orders'        => $orders,
+            'mes'           => $mes,
+            'year'          => $year,
+            'subtotal'      => $subtotal,
+            'iva'           => $iva,
+            'total'         => $total,
+            'tecnicoNombre' => $tecnicoNombre,
+        ];
+
+        // 1. Generar el PDF
+        $dompdf = new \Dompdf\Dompdf([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled'      => true
+        ]);
+        $html = view('orders/billing_pdf', $data);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        
+        $output = $dompdf->output();
+
+        $meses = [
+            '01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril',
+            '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto',
+            '09' => 'Septiembre', '10' => 'Octubre', '11' => 'Noviembre', '12' => 'Diciembre'
+        ];
+        $nombreMes = $meses[$mes] ?? $mes;
+        
+        // Guardar el archivo temporalmente
+        $filename = "Reporte_Instalaciones_{$nombreMes}_{$year}.pdf";
+        $filepath = WRITEPATH . 'uploads/' . $filename;
+        file_put_contents($filepath, $output);
+
+        // 2. Enviar por email usando los ajustes guardados en la base de datos
+        $settings = service('settings');
+        $emailService = \Config\Services::email();
+        
+        // Cargar contraseña SMTP desencriptada
+        $encryptedPass = $settings->get('Email.SMTPPass');
+        $decryptedPass = '';
+        if (!empty($encryptedPass)) {
+            try {
+                $encrypter = \Config\Services::encrypter();
+                $decryptedPass = $encrypter->decrypt(base64_decode($encryptedPass));
+            } catch (\Exception $e) {
+                log_message('error', 'Error al desencriptar contraseña SMTP para facturación: ' . $e->getMessage());
+            }
+        }
+
+        $config = [
+            'protocol'   => 'smtp',
+            'SMTPHost'   => $settings->get('Email.SMTPHost'),
+            'SMTPUser'   => $settings->get('Email.SMTPUser'),
+            'SMTPPass'   => $decryptedPass,
+            'SMTPPort'   => (int) $settings->get('Email.SMTPPort') ?: 587,
+            'SMTPCrypto' => $settings->get('Email.SMTPCrypto') ?: 'tls',
+            'mailType'   => 'html',
+            'charset'    => 'utf-8',
+            'newline'    => "\r\n",
+        ];
+
+        $emailService->initialize($config);
+
+        $fromEmail = $settings->get('Email.fromEmail') ?: ($config['SMTPUser'] ?: 'no-reply@tudominio.com');
+        $fromName  = $settings->get('Email.fromName') ?: 'Sistema OtGest';
+
+        $emailService->setFrom($fromEmail, $fromName);
+        $emailService->setTo($emailDestino);
+        $emailService->setSubject("Reporte de Facturación Mensual - {$nombreMes} {$year} ({$tecnicoNombre})");
+        $emailService->setMessage("
+            <p>Hola,</p>
+            <p>Adjunto encontrarás el reporte de facturación e instalaciones correspondiente al mes de <strong>{$nombreMes} de {$year}</strong> generado por el técnico <strong>{$tecnicoNombre}</strong>.</p>
+            <hr>
+            <p><strong>Resumen del Periodo:</strong></p>
+            <ul>
+                <li><strong>Instalaciones realizadas:</strong> " . count($orders) . "</li>
+                <li><strong>Base Imponible:</strong> " . number_format($subtotal, 2, ',', '.') . " €</li>
+                <li><strong>IVA (21%):</strong> " . number_format($iva, 2, ',', '.') . " €</li>
+                <li><strong>Total Acumulado:</strong> " . number_format($total, 2, ',', '.') . " €</li>
+            </ul>
+            <p>Este es un correo automático del sistema OtGest.</p>
+        ");
+        
+        $emailService->attach($filepath);
+
+        $success = $emailService->send();
+        
+        // 3. Limpieza: Eliminar archivo físico temporal
+        if (file_exists($filepath)) {
+            unlink($filepath);
+        }
+
+        if ($success) {
+            return redirect()->to(base_url('orders/billing?mes='.$mes.'&year='.$year))->with('message', 'El reporte mensual ha sido enviado exitosamente por correo a ' . $emailDestino);
+        } else {
+            log_message('error', 'Fallo al enviar reporte mensual: ' . $emailService->printDebugger(['headers']));
+            return redirect()->to(base_url('orders/billing?mes='.$mes.'&year='.$year))->with('error', 'No se pudo enviar el reporte por correo. Por favor, verifica tus Ajustes SMTP en administración.');
+        }
     }
 }

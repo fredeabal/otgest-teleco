@@ -109,9 +109,9 @@
                                 <option value="4" <?= ($estado == 4) ? 'selected' : '' ?>>Anulada</option>
                             </select>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="ot_fecha" class="form-label">Fecha de la Orden</label>
-                            <input type="text" class="form-control mydatepicker bg-dark text-white border-secondary" id="ot_fecha" name="ot_fecha" placeholder="Seleccione fecha..." value="<?= old('ot_fecha', isset($order['ot_fecha']) ? date('d/m/Y', strtotime($order['ot_fecha'])) : date('d/m/Y')) ?>">
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <label for="ot_fecha" class="form-label">Fecha de Orden <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control mydatepicker" id="ot_fecha" name="ot_fecha" placeholder="Seleccione fecha..." value="<?= old('ot_fecha', isset($order['ot_fecha']) ? date('d/m/Y', strtotime($order['ot_fecha'])) : date('d/m/Y')) ?>">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="template_selector" class="form-label">Plantilla de Comentarios</label>
@@ -143,10 +143,15 @@
                         <div class="col-12 mb-4">
                             <div class="form-check form-switch px-4 py-3">
                                 <input class="form-check-input switch-custom-size" type="checkbox" role="switch" id="ot_imputada" name="ot_imputada" value="1" <?= (old('ot_imputada', $order['ot_imputada']) == 1) ? 'checked' : '' ?>>
-                                <label class="form-check-label ms-2 pt-0 fw-semibold cursor-pointer" for="ot_imputada">
+                                <label class="form-check-label text-body ms-2 pt-0 fw-semibold cursor-pointer" for="ot_imputada">
                                     Orden Imputada en Almacén
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="ot_precio" class="form-label">Importe (€)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="ot_precio" name="ot_precio" value="<?= old('ot_precio', number_format($order['ot_precio'], 2, '.', '')) ?>">
                         </div>
                     </div>
 
