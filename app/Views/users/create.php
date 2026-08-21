@@ -137,11 +137,18 @@ document.addEventListener("DOMContentLoaded", function() {
         reverseButtons: true,
         customClass: {
             confirmButton: 'btn btn-primary ms-2',
-            cancelButton: 'btn btn-outline-primary'
+            cancelButton: 'btn btn-outline-primary',
+            input: 'd-none' // Forzar ocultar el input si algún CSS global lo está mostrando
         },
         buttonsStyling: false,
         background: 'var(--bs-card-bg)',
-        color: 'var(--bs-heading-color)'
+        color: 'var(--bs-heading-color)',
+        didOpen: () => {
+            const input = Swal.getInput();
+            if (input) {
+                input.style.setProperty('display', 'none', 'important');
+            }
+        }
     }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById('restoreUserForm').submit();
