@@ -328,6 +328,14 @@ class UsersController extends BaseController
                 $orderModel = model('OrderModel');
                 $orderModel->where('ot_usr', $user->id)->delete();
 
+                // Borrado en cascada: Eliminar Plantillas asociadas al usuario
+                $templateModel = model('TemplateModel');
+                $templateModel->where('plantilla_usr', $user->id)->delete();
+
+                // Borrado en cascada: Eliminar Tareas (Todos) asociadas al usuario
+                $todoModel = model('TodoModel');
+                $todoModel->where('todo_usr', $user->id)->delete();
+
                 // Borrar usuario de forma definitiva (Hard Delete)
                 $this->usersModel->delete($user->id, true);
                 
