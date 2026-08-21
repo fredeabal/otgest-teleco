@@ -141,9 +141,18 @@ class UsersController extends BaseController
         $db->transBegin();
 
         try {
-            $this->usersModel->save($user);
-            $newUserId = $this->usersModel->getInsertID();
+            if (!$this->usersModel->save($user)) {
+                throw new \Exception('Error al guardar el usuario en la base de datos.');
+            }
+            
+            // Shield actualiza el objeto $user con el nuevo ID tras el insert
+            $newUserId = $user->id ?? $this->usersModel->getInsertID();
             $userObj = $this->usersModel->findById($newUserId);
+            
+            if (!$userObj) {
+                throw new \Exception('El usuario se guardó pero no se pudo recuperar de la BD.');
+            }
+            
             $userObj->addGroup($this->request->getPost('group'));
 
             // Si no se marcó como activo, lo baneamos (desactivamos) de entrada
