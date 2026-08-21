@@ -145,15 +145,18 @@ document.addEventListener("DOMContentLoaded", function() {
         customClass: {
             confirmButton: 'btn btn-primary ms-2',
             cancelButton: 'btn btn-outline-primary',
-            input: 'd-none' // Forzar ocultar el input si algún CSS global lo está mostrando
+            input: 'd-none'
         },
         buttonsStyling: false,
         background: 'var(--bs-card-bg)',
         color: 'var(--bs-heading-color)',
         didOpen: () => {
-            const input = Swal.getInput();
-            if (input) {
-                input.style.setProperty('display', 'none', 'important');
+            const popup = Swal.getPopup();
+            if (popup) {
+                const hiddenElements = popup.querySelectorAll('.swal2-input, .swal2-file, .swal2-textarea, .swal2-select, .swal2-radio, .swal2-checkbox');
+                hiddenElements.forEach(el => {
+                    el.style.setProperty('display', 'none', 'important');
+                });
             }
         }
     }).then((result) => {
