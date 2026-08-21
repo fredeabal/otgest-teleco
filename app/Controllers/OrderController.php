@@ -675,6 +675,7 @@ class OrderController extends BaseController
             'subtotal'      => $subtotal,
             'iva'           => $iva,
             'total'         => $total,
+            'logoUrl'       => base_url('assets/images/logos/email-logo.png')
         ];
         $emailBody = view('emails/billing_report', $dataEmail);
         $emailService->setMessage($emailBody);
