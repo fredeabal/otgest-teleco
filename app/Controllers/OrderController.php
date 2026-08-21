@@ -666,19 +666,18 @@ class OrderController extends BaseController
         $emailService->setFrom($fromEmail, $fromName);
         $emailService->setTo($emailDestino);
         $emailService->setSubject("Reporte de Facturación Mensual - {$nombreMes} {$year} ({$tecnicoNombre})");
-        $emailService->setMessage("
-            <p>Hola,</p>
-            <p>Adjunto encontrarás el reporte de facturación e instalaciones correspondiente al mes de <strong>{$nombreMes} de {$year}</strong> generado por el técnico <strong>{$tecnicoNombre}</strong>.</p>
-            <hr>
-            <p><strong>Resumen del Periodo:</strong></p>
-            <ul>
-                <li><strong>Instalaciones realizadas:</strong> " . count($orders) . "</li>
-                <li><strong>Base Imponible:</strong> " . number_format($subtotal, 2, ',', '.') . " €</li>
-                <li><strong>IVA (21%):</strong> " . number_format($iva, 2, ',', '.') . " €</li>
-                <li><strong>Total Acumulado:</strong> " . number_format($total, 2, ',', '.') . " €</li>
-            </ul>
-            <p>Este es un correo automático del sistema OtGest.</p>
-        ");
+        
+        $dataEmail = [
+            'nombreMes'     => $nombreMes,
+            'year'          => $year,
+            'tecnicoNombre' => $tecnicoNombre,
+            'orders'        => $orders,
+            'subtotal'      => $subtotal,
+            'iva'           => $iva,
+            'total'         => $total,
+        ];
+        $emailBody = view('emails/billing_report', $dataEmail);
+        $emailService->setMessage($emailBody);
         
         $emailService->attach($filepath);
 
