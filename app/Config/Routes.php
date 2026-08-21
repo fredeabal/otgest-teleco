@@ -57,7 +57,7 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     $routes->get('users/edit/(:num)', 'UsersController::edit/$1', ['filter' => 'permission:admin.users,users.edit']);
     $routes->post('users/update/(:num)', 'UsersController::update/$1', ['filter' => 'permission:admin.users,users.edit']);
     $routes->post('users/toggle-active/(:num)', 'UsersController::toggleActive/$1', ['filter' => 'permission:admin.users,users.edit']);
-    $routes->post('users/restore/(:num)', 'UsersController::restore/$1', ['filter' => 'permission:admin.users,users.create']);
+
     $routes->post('users/delete/(:num)', 'UsersController::delete/$1', ['filter' => 'permission:admin.users,users.delete']);
 
     // Rutas de Roles
