@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class AddTodoCompletedToTodos extends Migration
+{
+    public function up()
+    {
+        $this->forge->addColumn('todos', [
+            'todo_completed' => [
+                'type'       => 'INT',
+                'constraint' => 1,
+                'default'    => 0,
+                'null'       => false,
+            ],
+        ]);
+    }
+
+    public function down()
+    {
+        $this->forge->dropColumn('todos', 'todo_completed');
+    }
+}
