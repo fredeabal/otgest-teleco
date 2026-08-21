@@ -198,7 +198,7 @@ class OrderController extends BaseController
         $data['images'] = $this->imageModel->where('img_ot_id', $id)->findAll();
         
         $userProvider = auth()->getProvider();
-        $user = $userProvider->findById($order['ot_usr']);
+        $user = $userProvider->withDeleted()->findById($order['ot_usr']);
         $data['tecnico_nombre'] = $user ? $user->username : 'Usuario ID: ' . $order['ot_usr'];
 
         // Anterior Orden
@@ -526,9 +526,10 @@ class OrderController extends BaseController
         $total = $subtotal + $iva;
 
         $userProvider = auth()->getProvider();
-        $user = $userProvider->findById($userId);
-        $tecnicoNombre = $user ? $user->username : 'Técnico';
-
+        // Obtener el usuario seleccionado o el actual. Permitir obtener usuarios eliminados (soft deletes) para historial
+        $targetUserId = $selectedUserId ?: $userId;
+        $user = $userProvider->withDeleted()->findById($targetUserId);
+        $tecnicoNombre = $user ? $user->username : 'Técnico Desconocido';
         $data = [
             'orders'        => $orders,
             'mes'           => $mes,
@@ -598,8 +599,10 @@ class OrderController extends BaseController
         $total = $subtotal + $iva;
 
         $userProvider = auth()->getProvider();
-        $user = $userProvider->findById($selectedUserId ?: $userId);
-        $tecnicoNombre = $user ? $user->username : 'Técnico';
+        // Obtener el usuario seleccionado o el actual (incluyendo eliminados)
+        $targetUserId = $selectedUserId ?: $userId;
+        $user = $userProvider->withDeleted()->findById($targetUserId);
+        $tecnicoNombre = $user ? $user->username : 'Técnico Desconocido';
 
         $data = [
             'orders'        => $orders,
