@@ -8,18 +8,22 @@ class AddTodoCompletedToTodos extends Migration
 {
     public function up()
     {
-        $this->forge->addColumn('todos', [
-            'todo_completed' => [
-                'type'       => 'INT',
-                'constraint' => 1,
-                'default'    => 0,
-                'null'       => false,
-            ],
-        ]);
+        if (!$this->db->fieldExists('todo_completed', 'todos')) {
+            $this->forge->addColumn('todos', [
+                'todo_completed' => [
+                    'type'       => 'INT',
+                    'constraint' => 1,
+                    'default'    => 0,
+                    'null'       => false,
+                ],
+            ]);
+        }
     }
 
     public function down()
     {
-        $this->forge->dropColumn('todos', 'todo_completed');
+        if ($this->db->fieldExists('todo_completed', 'todos')) {
+            $this->forge->dropColumn('todos', 'todo_completed');
+        }
     }
 }
