@@ -242,6 +242,7 @@ function confirmarEnvioCorreo() {
         text: 'Introduce la dirección de correo a la que deseas enviar los detalles de la orden Nº <?= htmlspecialchars($order['ot_numero']) ?>:',
         input: 'email',
         inputPlaceholder: 'correo@ejemplo.com',
+        inputValue: '<?= auth()->user()->getIdentities()[0]->secret ?? "" ?>',
         showCancelButton: true,
         confirmButtonText: 'Enviar',
         cancelButtonText: 'Cancelar',
