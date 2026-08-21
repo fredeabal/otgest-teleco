@@ -459,7 +459,7 @@ class OrderController extends BaseController
         $users = [];
         if ($canViewAll) {
             $usersModel = new UserModel();
-            $users = $usersModel->findAll();
+            $users = $usersModel->where('active', 1)->findAll();
         }
 
         $orders = $query->orderBy('ot_fecha', 'ASC')->findAll();
