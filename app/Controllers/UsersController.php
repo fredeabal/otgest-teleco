@@ -318,9 +318,9 @@ class UsersController extends BaseController
                 $identityModel = model(\CodeIgniter\Shield\Models\UserIdentityModel::class);
                 $identityModel->where('user_id', $user->id)->delete();
 
-                // Borrar usuario
-                $this->usersModel->delete($user->id, true);
-                return redirect()->to('users')->with('message', 'Usuario eliminado.');
+                // Borrar usuario (Soft Delete para no perder el historial de OTs)
+                $this->usersModel->delete($user->id);
+                return redirect()->to('users')->with('message', 'Usuario eliminado (historial conservado).');
             } catch (\Throwable $e) {
                 return redirect()->to('users')->with('error', 'Error al eliminar usuario: ' . $e->getMessage());
             }
