@@ -373,7 +373,7 @@ class UsersController extends BaseController
 
     public function restore($id)
     {
-        $restoreData = session()->get('restore_user_data');
+        $restoreData = $this->request->getPost();
         if (!$restoreData || $restoreData['id'] != $id) {
             return redirect()->to('users')->with('error', 'Datos de restauración inválidos.');
         }
@@ -384,17 +384,15 @@ class UsersController extends BaseController
         }
 
         try {
-            // Eliminar la fecha de borrado
-            $this->usersModel->update($id, ['deleted_at' => null]);
+            // Eliminar la fecha de borrado usando el builder para evitar bloqueos del modelo
+            $this->usersModel->builder()->where('id', $id)->update(['deleted_at' => null]);
             
             // Actualizar el modelo instanciado para trabajar con él
             $user = $this->usersModel->find($id);
 
             // Aplicar los nuevos datos ingresados en el formulario
-            $user->fill([
-                'username' => $restoreData['username'],
-                'phone' => $restoreData['phone']
-            ]);
+            $user->username = $restoreData['username'];
+            $user->phone = $restoreData['phone'];
 
             if (!empty($restoreData['password'])) {
                 $user->setPassword($restoreData['password']);

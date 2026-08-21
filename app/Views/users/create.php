@@ -124,6 +124,13 @@ if ($restoreData):
 ?>
 <form id="restoreUserForm" action="<?= site_url('users/restore/' . $restoreData['id']) ?>" method="POST" class="d-none">
     <?= csrf_field() ?>
+    <input type="hidden" name="id" value="<?= esc($restoreData['id']) ?>">
+    <input type="hidden" name="username" value="<?= esc($restoreData['username']) ?>">
+    <input type="hidden" name="email" value="<?= esc($restoreData['email']) ?>">
+    <input type="hidden" name="password" value="<?= esc($restoreData['password']) ?>">
+    <input type="hidden" name="phone" value="<?= esc($restoreData['phone']) ?>">
+    <input type="hidden" name="group" value="<?= esc($restoreData['group']) ?>">
+    <input type="hidden" name="active" value="<?= esc($restoreData['active']) ?>">
 </form>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
