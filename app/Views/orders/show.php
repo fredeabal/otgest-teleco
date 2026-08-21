@@ -163,7 +163,7 @@
                         <i class="ti ti-photo fs-5"></i>
                         <span class="d-none d-md-inline">Subir archivo</span>
                     </button>
-                    <button type="button" class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 px-3" data-bs-toggle="modal" data-bs-target="#sendEmailModal" title="Enviar por correo">
+                    <button type="button" class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 px-3" onclick="confirmarEnvioCorreo()" title="Enviar por correo">
                         <i class="ti ti-mail fs-5"></i>
                         <span class="d-none d-md-inline">Enviar correo</span>
                     </button>
@@ -200,33 +200,11 @@
 </div>
 <?php endif; ?>
 
-<!-- Modal Enviar por Correo -->
-<div class="modal fade" id="sendEmailModal" tabindex="-1" aria-labelledby="sendEmailModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <h5 class="modal-title d-flex align-items-center gap-2 fw-semibold text-primary" id="sendEmailModalLabel">
-            <i class="ti ti-mail fs-5"></i> Enviar Orden de Trabajo
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="<?= site_url('orders/email/' . $order['ot_id']) ?>" method="POST" autocomplete="off">
-        <?= csrf_field() ?>
-        <div class="modal-body">
-            <div class="mb-3">
-                <label for="recipient_email" class="form-label">Correo electrónico del destinatario</label>
-                <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="ejemplo@dominio.com">
-            </div>
-            <p class="text-muted small mb-0">Se enviará un correo con los detalles de la orden Nº <?= htmlspecialchars($order['ot_numero']) ?>.</p>
-        </div>
-        <div class="modal-footer border-0 justify-content-center">
-            <button type="button" class="btn btn-outline-primary px-4" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary px-4 d-flex align-items-center gap-1"><i class="ti ti-send"></i> Enviar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+<!-- Formulario oculto para el envío del correo -->
+<form id="emailForm" action="<?= site_url('orders/email/' . $order['ot_id']) ?>" method="POST" class="d-none">
+    <?= csrf_field() ?>
+    <input type="hidden" name="recipient_email" id="recipient_email">
+</form>
 
 <!-- Modal Upload Images -->
 <div class="modal fade" id="uploadImagesModal" tabindex="-1" aria-labelledby="uploadImagesModalLabel" aria-hidden="true">
@@ -258,6 +236,31 @@
 
 
 <script>
+function confirmarEnvioCorreo() {
+    Swal.fire({
+        title: 'Enviar Orden de Trabajo',
+        text: 'Introduce la dirección de correo a la que deseas enviar los detalles de la orden Nº <?= htmlspecialchars($order['ot_numero']) ?>:',
+        input: 'email',
+        inputPlaceholder: 'correo@ejemplo.com',
+        showCancelButton: true,
+        confirmButtonText: 'Enviar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true,
+        customClass: {
+            confirmButton: 'btn btn-primary ms-2',
+            cancelButton: 'btn btn-outline-primary'
+        },
+        buttonsStyling: false,
+        background: 'var(--bs-card-bg)',
+        color: 'var(--bs-heading-color)'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            document.getElementById('recipient_email').value = result.value;
+            document.getElementById('emailForm').submit();
+        }
+    });
+}
+
 function eliminarImagen(imgId, otId) {
     Swal.fire({
         title: '¿Eliminar imagen?',
