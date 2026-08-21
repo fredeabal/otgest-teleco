@@ -109,8 +109,8 @@
                                 <option value="4" <?= ($estado == 4) ? 'selected' : '' ?>>Anulada</option>
                             </select>
                         </div>
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <label for="ot_fecha" class="form-label">Fecha de Orden <span class="text-danger">*</span></label>
+                        <div class="col-md-4 mb-3">
+                            <label for="ot_fecha" class="form-label">Fecha de Orden</label>
                             <input type="text" class="form-control mydatepicker" id="ot_fecha" name="ot_fecha" placeholder="Seleccione fecha..." value="<?= old('ot_fecha', isset($order['ot_fecha']) ? date('d/m/Y', strtotime($order['ot_fecha'])) : date('d/m/Y')) ?>">
                         </div>
                         <div class="col-md-4 mb-3">
