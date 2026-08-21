@@ -459,7 +459,12 @@ class OrderController extends BaseController
         $users = [];
         if ($canViewAll) {
             $usersModel = new UserModel();
-            $users = $usersModel->where('active', 1)->findAll();
+            // CodeIgniter Shield usa la columna 'status' para banear usuarios (suspendidos)
+            $users = $usersModel->groupStart()
+                                ->where('status !=', 'banned')
+                                ->orWhere('status', null)
+                                ->groupEnd()
+                                ->findAll();
         }
 
         $orders = $query->orderBy('ot_fecha', 'ASC')->findAll();
