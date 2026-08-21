@@ -119,7 +119,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <textarea class="form-control font-monospace text-warning bg-dark" id="ot_txt" name="ot_txt" rows="6"><?= old('ot_txt') ?></textarea>
+                            <textarea class="form-control font-monospace" id="ot_txt" name="ot_txt" rows="6"><?= old('ot_txt') ?></textarea>
                         </div>
 
                         <div class="col-12 mb-4">
@@ -147,52 +147,78 @@
 </div>
 
 <script>
+/**
+ * Convierte el texto del textarea de comentarios a mayúsculas, 
+ * exceptuando las URLs para no romper los enlaces.
+ */
 function convertToUppercase() {
     const textarea = document.getElementById('ot_txt');
-    const start = textarea.selectionStart;
+    const start = textarea.selectionStart; // Guardar posición del cursor
     const end = textarea.selectionEnd;
 
     const text = textarea.value;
+    // Expresión regular para identificar URLs
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const parts = text.split(urlRegex);
+    
+    // Procesar cada parte: si es URL se mantiene, si no, se pasa a mayúsculas
     const result = parts.map(part => {
         if (part.match(urlRegex)) return part;
         return part.toUpperCase();
     }).join('');
 
     textarea.value = result;
+    // Restaurar posición del cursor
     textarea.setSelectionRange(start, end);
     textarea.focus();
+    
+    // Auto-ajustar altura después del cambio
     if(typeof autoResizeTextarea === 'function') autoResizeTextarea(textarea);
 }
 
+/**
+ * Inserta el contenido de la plantilla seleccionada en el textarea de comentarios.
+ * Si ya hay texto, lo añade en una nueva línea.
+ */
 function insertTemplate() {
     const selector = document.getElementById('template_selector');
     const textarea = document.getElementById('ot_txt');
+    
     if (selector.value) {
+        // Añadir con salto de línea si el textarea no está vacío
         if (textarea.value.trim() !== '') {
             textarea.value += '\n' + selector.value;
         } else {
             textarea.value = selector.value;
         }
-        selector.value = ''; // Reset
+        selector.value = ''; // Resetear el selector
+        
+        // Auto-ajustar altura
         if(typeof autoResizeTextarea === 'function') autoResizeTextarea(textarea);
     }
 }
 
-// Auto-resize para el textarea de comentarios
+/**
+ * Ajusta dinámicamente la altura del textarea según su contenido (auto-resize).
+ * @param {HTMLElement} el El elemento textarea
+ */
 function autoResizeTextarea(el) {
     el.style.overflow = 'hidden';
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
 }
+
 document.addEventListener('DOMContentLoaded', function() {
+    // ---------------------------------------------------------------------
+    // Copiar comentarios al portapapeles antes de enviar el formulario
+    // ---------------------------------------------------------------------
     const orderForm = document.getElementById('orderForm');
     if (orderForm) {
         orderForm.addEventListener('submit', function(e) {
             const textarea = document.getElementById('ot_txt');
             if (textarea && textarea.value.trim() !== '') {
-                e.preventDefault();
+                e.preventDefault(); // Pausar el envío nativo
+                // Intentar copiar al portapapeles y luego enviar el formulario
                 navigator.clipboard.writeText(textarea.value).finally(() => {
                     orderForm.submit();
                 });
@@ -200,25 +226,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ---------------------------------------------------------------------
+    // Inicialización del auto-resize para el textarea de comentarios
+    // ---------------------------------------------------------------------
     const tx = document.getElementById('ot_txt');
     if (tx) {
         tx.addEventListener('input', function() { autoResizeTextarea(this); });
-        // Ajuste inicial si hay contenido cargado
+        // Ajuste inicial por si hay contenido pre-cargado (ej. validation old data)
         setTimeout(() => autoResizeTextarea(tx), 100);
     }
 
-    // Validación de número de orden duplicado en tiempo real
+    // ---------------------------------------------------------------------
+    // Validación de número de orden duplicado mediante AJAX (tiempo real)
+    // ---------------------------------------------------------------------
     const inputNumero = document.getElementById('ot_numero');
     const feedback = document.getElementById('ot_numero_feedback');
     const submitBtn = document.querySelector('button[type="submit"]');
     let timeout = null;
-    let currentCsrf = '<?= csrf_hash() ?>';
+    let currentCsrf = '<?= csrf_hash() ?>'; // Token inicial CSRF
 
     if (inputNumero) {
         inputNumero.addEventListener('input', function() {
             clearTimeout(timeout);
             const numero = this.value.trim();
             
+            // Si tiene menos de 3 caracteres, limpiar estados de error
             if (numero.length < 3) {
                 inputNumero.style.borderColor = '';
                 if (feedback) feedback.classList.add('d-none');
@@ -226,6 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            // Debounce de 500ms para evitar múltiples peticiones seguidas
             timeout = setTimeout(() => {
                 fetch('<?= site_url('orders/check-numero') ?>', {
                     method: 'POST',
@@ -240,10 +273,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    // Actualizamos el token para la siguiente llamada AJAX si se proporcionó uno nuevo
                     if (data.csrfToken) {
-                        currentCsrf = data.csrfToken; // Actualizamos el token para la siguiente llamada
+                        currentCsrf = data.csrfToken; 
                     }
+                    
                     if (data.status === 'error') {
+                        // Número de orden duplicado: marcar error y bloquear submit
                         inputNumero.style.borderColor = 'var(--bs-primary)';
                         if (feedback) {
                             feedback.innerHTML = `<a href="<?= site_url('orders/show/') ?>${data.order_id}" class="text-primary text-decoration-none">${data.message}</a>`;
@@ -251,13 +287,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                         if (submitBtn) submitBtn.disabled = true;
                     } else {
+                        // Número de orden válido: limpiar estado de error y desbloquear submit
                         inputNumero.style.borderColor = '';
                         if (feedback) feedback.classList.add('d-none');
                         if (submitBtn) submitBtn.disabled = false;
                     }
                 })
                 .catch(error => console.error('Error:', error));
-            }, 500); // 500ms debounce
+            }, 500); 
         });
     }
 });
