@@ -117,3 +117,36 @@ document.addEventListener("DOMContentLoaded", function() {
         </div>
     </div>
 </div>
+
+<?php 
+$restoreData = session()->get('restore_user_data');
+if ($restoreData): 
+?>
+<form id="restoreUserForm" action="<?= site_url('users/restore/' . $restoreData['id']) ?>" method="POST" class="d-none">
+    <?= csrf_field() ?>
+</form>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+        title: 'Usuario Eliminado Detectado',
+        html: `El usuario <strong><?= esc($restoreData['username']) ?></strong> (<?= esc($restoreData['email']) ?>) ya existe pero se encuentra en la papelera.<br><br>¿Deseas restaurar su cuenta y recuperar su historial de OTs usando los nuevos datos que acabas de introducir?`,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, restaurar',
+        cancelButtonText: 'No, cancelar',
+        reverseButtons: true,
+        customClass: {
+            confirmButton: 'btn btn-primary ms-2',
+            cancelButton: 'btn btn-outline-primary'
+        },
+        buttonsStyling: false,
+        background: 'var(--bs-card-bg)',
+        color: 'var(--bs-heading-color)'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('restoreUserForm').submit();
+        }
+    });
+});
+</script>
+<?php endif; ?>

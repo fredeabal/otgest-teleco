@@ -97,6 +97,49 @@ class UsersController extends BaseController
             $allowedGroups = array_filter($allowedGroups, fn($g) => $g !== 'superadmin');
         }
 
+        // 1. ANTES de la validación estándar, comprobamos si el email o username pertenecen a un usuario eliminado (soft-delete)
+        $emailInput = $this->request->getPost('email');
+        $usernameInput = $this->request->getPost('username');
+        
+        // Buscar identidades (email) de usuarios eliminados
+        $db = \Config\Database::connect();
+        $deletedUserId = null;
+        
+        $identity = $db->table('auth_identities')
+                       ->select('user_id')
+                       ->where('secret', $emailInput)
+                       ->where('type', 'email_password')
+                       ->get()
+                       ->getRow();
+                       
+        if ($identity) {
+            $userCheck = $this->usersModel->withDeleted()->find($identity->user_id);
+            if ($userCheck && $userCheck->deleted_at !== null) {
+                $deletedUserId = $userCheck->id;
+            }
+        }
+        
+        // Si no lo encontramos por email, buscamos por username en eliminados
+        if (!$deletedUserId) {
+            $userCheck = $this->usersModel->withDeleted()->where('username', $usernameInput)->first();
+            if ($userCheck && $userCheck->deleted_at !== null) {
+                $deletedUserId = $userCheck->id;
+            }
+        }
+        
+        if ($deletedUserId) {
+            // Guardar los datos del formulario en sesión para la restauración
+            return redirect()->back()->withInput()->with('restore_user_data', [
+                'id' => $deletedUserId,
+                'username' => $usernameInput,
+                'email' => $emailInput,
+                'password' => $this->request->getPost('password'),
+                'phone' => $this->request->getPost('phone'),
+                'group' => $this->request->getPost('group'),
+                'active' => $this->request->getPost('active')
+            ]);
+        }
+
         $rules = [
             'email'    => [
                 'label' => 'correo electrónico',
@@ -314,9 +357,8 @@ class UsersController extends BaseController
                 if (!empty($user->profile_pic) && file_exists(FCPATH . 'uploads/profile/' . $user->profile_pic)) {
                     unlink(FCPATH . 'uploads/profile/' . $user->profile_pic);
                 }
-                // Borrar identidades primero para evitar registros huérfanos
-                $identityModel = model(\CodeIgniter\Shield\Models\UserIdentityModel::class);
-                $identityModel->where('user_id', $user->id)->delete();
+                // Nota: Mantenemos intactas las identidades (auth_identities) para detectar conflictos 
+                // si se intenta volver a registrar y poder ofrecer la restauración.
 
                 // Borrar usuario (Soft Delete para no perder el historial de OTs)
                 $this->usersModel->delete($user->id);
@@ -327,6 +369,59 @@ class UsersController extends BaseController
         }
 
         return redirect()->to('users')->with('error', 'Usuario no encontrado.');
+    }
+
+    public function restore($id)
+    {
+        $restoreData = session()->get('restore_user_data');
+        if (!$restoreData || $restoreData['id'] != $id) {
+            return redirect()->to('users')->with('error', 'Datos de restauración inválidos.');
+        }
+
+        $user = $this->usersModel->withDeleted()->find($id);
+        if (!$user) {
+            return redirect()->to('users')->with('error', 'Usuario a restaurar no encontrado.');
+        }
+
+        try {
+            // Eliminar la fecha de borrado
+            $this->usersModel->update($id, ['deleted_at' => null]);
+            
+            // Actualizar el modelo instanciado para trabajar con él
+            $user = $this->usersModel->find($id);
+
+            // Aplicar los nuevos datos ingresados en el formulario
+            $user->fill([
+                'username' => $restoreData['username'],
+                'phone' => $restoreData['phone']
+            ]);
+
+            if (!empty($restoreData['password'])) {
+                $user->setPassword($restoreData['password']);
+            }
+
+            $this->usersModel->save($user);
+
+            // Sincronizar grupos
+            $user->syncGroups($restoreData['group']);
+
+            // Actualizar email si es diferente
+            $identityModel = model(\CodeIgniter\Shield\Models\UserIdentityModel::class);
+            $identityModel->where('user_id', $user->id)
+                          ->where('type', 'email_password')
+                          ->update(null, ['secret' => $restoreData['email']]);
+
+            // Reactivar o banear según lo solicitado
+            if ($restoreData['active']) {
+                $user->unBan();
+            } else {
+                $user->ban('Desactivado por el administrador');
+            }
+
+            return redirect()->to('users')->with('message', 'Usuario restaurado y actualizado correctamente. Se ha conservado su historial de OTs.');
+        } catch (\Throwable $e) {
+            return redirect()->to('users')->with('error', 'Error al restaurar: ' . $e->getMessage());
+        }
     }
 
 }
