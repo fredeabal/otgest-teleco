@@ -325,7 +325,7 @@
 }
 
 /* =============================================
-   ESTILOS DE LA LANDING PAGE (FILECREW)
+   ESTILOS DE LA LANDING PAGE (OTGEST)
    ============================================= */
 .landing-body {
     background-color: #0b1114;
@@ -535,16 +535,16 @@
 }
 
 /* =============================================
-   FileCrew Custom CSS Logos (Rule 9 Compliant)
+   OtGest Custom CSS Logos (Rule 9 Compliant)
    ============================================= */
-.filecrew-logo {
+.otgest-logo {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     text-decoration: none !important;
 }
 
-.filecrew-logo-icon {
+.otgest-logo-icon {
     width: 32px;
     height: 32px;
     background-color: var(--bs-primary);
@@ -555,23 +555,23 @@
     border-radius: 8px !important;
 }
 
-.filecrew-logo-text {
+.otgest-logo-text {
     font-weight: 800;
     font-size: 1.15rem;
     letter-spacing: 0.5px;
     color: var(--bs-heading-color, #2A3547);
 }
 
-[data-bs-theme="dark"] .filecrew-logo-text {
+[data-bs-theme="dark"] .otgest-logo-text {
     color: #ffffff;
 }
 
-.filecrew-logo-highlight {
+.otgest-logo-highlight {
     color: var(--bs-primary);
 }
 
 /* =============================================
-   FileCrew Drag & Drop Upload Zone (Rule 9)
+   OtGest Drag & Drop Upload Zone (Rule 9)
    ============================================= */
 .upload-dropzone {
     border: 2px dashed rgba(var(--bs-primary-rgb), 0.3);
