@@ -76,11 +76,11 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body p-3">
-                <?php $colClass = $canViewAll ? 'col-md-3' : 'col-md-4'; ?>
-                <form action="<?= site_url('orders/billing') ?>" method="get" class="row g-3 align-items-end">
+                <?php $colClass = $canViewAll ? 'col-md-4' : 'col-md-6'; ?>
+                <form id="billingFilterForm" action="<?= site_url('orders/billing') ?>" method="get" class="row g-3 align-items-end">
                     <div class="<?= $colClass ?> col-sm-6">
                         <label for="year" class="form-label font-size-13 text-muted">Seleccionar Año</label>
-                        <select class="form-select" id="year" name="year">
+                        <select class="form-select" id="year" name="year" onchange="this.form.submit()">
                             <?php
                             $currentYear = date('Y');
                             for($y = $currentYear; $y >= $currentYear - 5; $y--):
@@ -91,7 +91,7 @@
                     </div>
                     <div class="<?= $colClass ?> col-sm-6">
                         <label for="mes" class="form-label font-size-13 text-muted">Seleccionar Mes</label>
-                        <select class="form-select" id="mes" name="mes">
+                        <select class="form-select" id="mes" name="mes" onchange="this.form.submit()">
                             <?php
                             $meses = [
                                 '01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril',
@@ -105,7 +105,7 @@
                         </select>
                     </div>
                     <?php if($canViewAll): ?>
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-md-4 col-sm-12">
                         <label for="user_id" class="form-label font-size-13 text-muted">Técnico (Opcional)</label>
                         <select class="form-control select2" id="user_id" name="user_id">
                             <option value="">Todos los técnicos</option>
@@ -115,11 +115,6 @@
                         </select>
                     </div>
                     <?php endif; ?>
-                    <div class="<?= $colClass ?> col-sm-12 d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="ti ti-filter"></i> Filtrar Periodo
-                        </button>
-                    </div>
                 </form>
             </div>
         </div>
@@ -184,32 +179,38 @@
                     </table>
                 </div>
 
-                <!-- Resumen Financiero (Invoice Style) -->
-                <div class="d-flex justify-content-end mt-5">
-                    <div class="text-end" style="width: 300px;">
-                        <div class="d-flex align-items-center pb-2">
-                            <span class="text-muted fs-3">Total OTs del mes</span>
-                            <div class="ms-auto">
-                                <span class="text-white fw-semibold fs-3"><?= count($orders) ?></span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center pb-2">
-                            <span class="text-muted fs-3">Base Imponible</span>
-                            <div class="ms-auto">
-                                <span class="text-white fw-semibold fs-3"><?= number_format($subtotal, 2, ',', '.') ?> €</span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center pb-2">
-                            <span class="text-muted fs-3">IVA (21%)</span>
-                            <div class="ms-auto">
-                                <span class="text-white fw-semibold fs-3"><?= number_format($iva, 2, ',', '.') ?> €</span>
-                            </div>
-                        </div>
-                        <hr class="my-3 border-secondary">
-                        <div class="d-flex align-items-center pb-4">
-                            <span class="text-primary fs-5">Total Facturado</span>
-                            <div class="ms-auto">
-                                <span class="text-primary fw-bold fs-5"><?= number_format($total, 2, ',', '.') ?> €</span>
+                <!-- Resumen Financiero Premium -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="card bg-dark-subtle border border-secondary border-opacity-10 shadow-sm rounded-4 overflow-hidden mb-0">
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-semibold text-white mb-4 d-flex align-items-center gap-2">
+                                    <i class="ti ti-receipt-2 text-primary fs-6"></i> Resumen de Facturación
+                                </h5>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted fs-3">Total OTs del mes</span>
+                                    <span class="badge bg-primary-subtle text-primary fw-semibold fs-3 px-3 py-1 rounded-pill">
+                                        <?= count($orders) ?>
+                                    </span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted fs-3">Base Imponible</span>
+                                    <span class="text-white fw-semibold fs-4"><?= number_format($subtotal, 2, ',', '.') ?> €</span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <span class="text-muted fs-3">IVA (21%)</span>
+                                    <span class="text-white fw-semibold fs-4"><?= number_format($iva, 2, ',', '.') ?> €</span>
+                                </div>
+                                
+                                <div class="p-3 bg-primary bg-opacity-10 rounded-3 border border-primary border-opacity-25">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fw-bold fs-4">Total Facturado</span>
+                                        <span class="text-primary fw-bolder fs-5"><?= number_format($total, 2, ',', '.') ?> €</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -289,6 +290,8 @@ document.addEventListener('DOMContentLoaded', function() {
             width: '100%',
             placeholder: 'Todos los técnicos',
             allowClear: true
+        }).on('change', function() {
+            $('#billingFilterForm').submit();
         });
     }
 });
