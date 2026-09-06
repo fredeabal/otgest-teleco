@@ -32,6 +32,7 @@ class OrderController extends BaseController
 
         $query = $this->orderModel->select('ordenes.*, users.username')
                                   ->join('users', 'users.id = ordenes.ot_usr', 'left')
+                                  ->orderBy('ot_fecha', 'DESC')
                                   ->orderBy('ot_id', 'DESC');
         
         if (!empty($search)) {
